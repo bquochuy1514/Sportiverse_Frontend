@@ -5,6 +5,7 @@ import { AuthProvider } from './contexts/AuthContext'; // Import AuthProvider
 import LoginPage from './pages/auth/LoginPage';
 // Layouts
 import MainLayout from './components/layout/MainLayout';
+import AuthCallback from './pages/auth/AuthCallback';
 
 // Placeholder component cho các trang chưa tạo
 const Placeholder = ({ pageName }) => (
@@ -20,6 +21,7 @@ function App() {
 			<BrowserRouter>
 				<Routes>
 					<Route path="login" element={<LoginPage />} />
+					<Route path="/auth/callback" element={<AuthCallback />} />
 					<Route path="/" element={<MainLayout />}>
 						{/* <Route path="register" element={<Register />} /> */}
 						<Route

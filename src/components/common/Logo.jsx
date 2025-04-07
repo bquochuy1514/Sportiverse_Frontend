@@ -44,7 +44,7 @@ const Logo = ({ className = '' }) => {
 					<span className="text-blue-700 font-bold text-xl leading-none">
 						SPORTIVERSE
 					</span>
-					<span className="text-blue-600 text-xs leading-none">
+					<span className="text-blue-600 text-xs leading-none mt-1">
 						Sports Equipment Store
 					</span>
 				</div>

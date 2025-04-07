@@ -1,4 +1,3 @@
-// src/components/auth/LoginForm.jsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
@@ -11,7 +10,7 @@ const LoginForm = () => {
 	const [password, setPassword] = useState('');
 	const [remember, setRemember] = useState(false);
 	const [errorMessage, setErrorMessage] = useState('');
-	const [isLoading, setIsLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(false); // Loading cục bộ
 
 	const { login } = useAuth();
 	const navigate = useNavigate();
@@ -22,9 +21,8 @@ const LoginForm = () => {
 		setIsLoading(true);
 
 		try {
-			// Truyền thêm tham số remember vào hàm login
 			await login(email, password, remember);
-			navigate('/'); // Chuyển hướng về trang chủ sau khi đăng nhập thành công
+			navigate('/');
 		} catch (error) {
 			setErrorMessage(
 				error.message || 'Đăng nhập thất bại. Vui lòng thử lại.'
@@ -39,7 +37,6 @@ const LoginForm = () => {
 			{errorMessage && <ErrorAlert message={errorMessage} />}
 
 			<form className="space-y-6" onSubmit={handleSubmit}>
-				{/* Email input */}
 				<div>
 					<label
 						htmlFor="email-address"
@@ -62,7 +59,6 @@ const LoginForm = () => {
 					</div>
 				</div>
 
-				{/* Password input */}
 				<div>
 					<label
 						htmlFor="password"
@@ -85,7 +81,6 @@ const LoginForm = () => {
 					</div>
 				</div>
 
-				{/* Remember checkbox */}
 				<div className="flex items-center justify-between">
 					<div className="flex items-center">
 						<input
@@ -116,14 +111,13 @@ const LoginForm = () => {
 
 				<div>
 					<LoadingButton
-						isLoading={isLoading}
+						isLoading={isLoading} // Chỉ dùng isLoading cục bộ
 						loadingText="Đang đăng nhập..."
 						text="Đăng nhập"
 					/>
 				</div>
 			</form>
 
-			{/* Social login */}
 			<SocialLogin />
 
 			<p className="mt-8 text-center text-sm text-gray-600">
