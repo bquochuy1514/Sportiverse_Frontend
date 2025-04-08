@@ -5,10 +5,11 @@ import Logo from '../common/Logo';
 import SearchBar from '../common/SearchBar';
 import UserMenu from '../common/UserMenu';
 import NavItem from '../common/NavItem';
-import CartIcon from '../common/CartIcon';
+import CartIcon from '../common/icons/CartIcon';
 import LocationIcon from '../common/icons/LocationIcon';
 import SupportIcon from '../common/icons/SupportIcon';
 import UserIcon from '../common/icons/UserIcon';
+import SportsCategories from '../SportsCategories';
 import { useAuth } from '../../contexts/AuthContext';
 
 const Header = () => {
@@ -16,20 +17,20 @@ const Header = () => {
 
 	return (
 		<header className="bg-blue-50 shadow-sm border-b">
-			<div className="container mx-auto px-4">
-				<div className="flex items-center justify-between h-16">
+			<div className="container mx-auto px-4 max-w-screen-xl gap-4">
+				<div className="flex items-center justify-between h-16 gap-4">
 					{/* Logo */}
 					<div className="flex-shrink-0">
 						<Logo />
 					</div>
 
 					{/* Search bar */}
-					<div className="flex-1 max-w-2xl mx-4">
+					<div className="flex-1 max-w-lg mx-2 w-full">
 						<SearchBar placeholder="Tìm kiếm sản phẩm, môn thể thao..." />
 					</div>
 
 					{/* Right navigation */}
-					<div className="flex items-center space-x-6">
+					<div className="flex items-center gap-6 shrink-0">
 						{/* Địa điểm */}
 						<NavItem
 							to="/stores"
@@ -62,6 +63,8 @@ const Header = () => {
 					</div>
 				</div>
 			</div>
+			{/* Danh mục môn thể thao */}
+			<SportsCategories />
 		</header>
 	);
 };

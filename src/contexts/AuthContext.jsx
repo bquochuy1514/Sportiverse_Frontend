@@ -1,3 +1,4 @@
+// src/contexts/AuthContext.jsx
 import { createContext, useContext, useState, useEffect } from 'react';
 import {
 	fetchCurrentUser,
@@ -5,6 +6,7 @@ import {
 	registerUser,
 	logoutUser,
 	loginWithGoogle,
+	loginWithFacebook,
 } from '../services/authService';
 
 const AuthContext = createContext();
@@ -16,11 +18,22 @@ export function AuthProvider({ children }) {
 	);
 	const [user, setUser] = useState(null);
 	const [error, setError] = useState(null);
+	const [isAuthPopupOpen, setIsAuthPopupOpen] = useState(false);
 
 	const isTokenExpired = () => {
 		if (!tokenExpiry) return false;
 		return new Date(tokenExpiry) < new Date();
 	};
+
+	useEffect(() => {
+		const handleWindowFocus = () => {
+			if (isAuthPopupOpen) {
+				setIsAuthPopupOpen(false);
+			}
+		};
+		window.addEventListener('focus', handleWindowFocus);
+		return () => window.removeEventListener('focus', handleWindowFocus);
+	}, [isAuthPopupOpen]);
 
 	async function getUser() {
 		if (!token || isTokenExpired()) {
@@ -48,14 +61,35 @@ export function AuthProvider({ children }) {
 
 	const loginWithGoogleProvider = async () => {
 		try {
-			const { token, user } = await loginWithGoogle();
+			setIsAuthPopupOpen(true);
+			const { token, user: initialUser } = await loginWithGoogle();
 			localStorage.setItem('token', token);
 			setToken(token);
-			setUser(user);
+			setUser(initialUser); // Cập nhật user ban đầu
+			await getUser(); // Đồng bộ thông tin user từ server
 			setError(null);
-			return { token, user };
+			setIsAuthPopupOpen(false);
 		} catch (err) {
+			setIsAuthPopupOpen(false);
 			setError(err.message || 'Đăng nhập bằng Google thất bại');
+			throw err;
+		}
+	};
+
+	const loginWithFacebookProvider = async () => {
+		try {
+			setIsAuthPopupOpen(true);
+			const { token, user: initialUser } = await loginWithFacebook();
+			localStorage.setItem('token', token);
+			setToken(token);
+			setUser(initialUser); // Cập nhật user ban đầu
+			await getUser(); // Đồng bộ thông tin user từ server
+			setError(null);
+			setIsAuthPopupOpen(false);
+		} catch (err) {
+			// eslint-disable-next-line no-undef
+			setIs / AuthPopupOpen(false);
+			setError(err.message || 'Đăng nhập bằng Facebook thất bại');
 			throw err;
 		}
 	};
@@ -69,6 +103,7 @@ export function AuthProvider({ children }) {
 				setTokenExpiry(data.expires_at);
 			}
 			setToken(data.token);
+			await getUser(); // Đồng bộ user sau khi đăng nhập
 			setError(null);
 			return data;
 		} catch (err) {
@@ -91,15 +126,8 @@ export function AuthProvider({ children }) {
 
 	const register = async (userData) => {
 		try {
-			const data = await registerUser(userData);
-			localStorage.setItem('token', data.data.token);
-			if (data.data.expires_at) {
-				localStorage.setItem('token_expiry', data.data.expires_at);
-				setTokenExpiry(data.data.expires_at);
-			}
-			setToken(data.data.token);
+			await registerUser(userData);
 			setError(null);
-			return data;
 		} catch (err) {
 			setError(err.message || 'Đăng ký thất bại');
 			throw err;
@@ -109,14 +137,12 @@ export function AuthProvider({ children }) {
 	useEffect(() => {
 		if (token && !isTokenExpired()) {
 			getUser();
-		} else {
-			if (isTokenExpired()) {
-				localStorage.removeItem('token');
-				localStorage.removeItem('token_expiry');
-				setToken(null);
-				setTokenExpiry(null);
-				setUser(null);
-			}
+		} else if (isTokenExpired()) {
+			localStorage.removeItem('token');
+			localStorage.removeItem('token_expiry');
+			setToken(null);
+			setTokenExpiry(null);
+			setUser(null);
 		}
 	}, [token]);
 
@@ -132,7 +158,9 @@ export function AuthProvider({ children }) {
 				logout,
 				register,
 				loginWithGoogleProvider,
+				loginWithFacebookProvider,
 				isAuthenticated: !!user,
+				isAuthPopupOpen,
 			}}
 		>
 			{children}

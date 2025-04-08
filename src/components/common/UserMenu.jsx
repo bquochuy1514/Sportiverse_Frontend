@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { toast } from 'react-toastify'; // Import toast
 
 const UserMenu = () => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -30,6 +31,13 @@ const UserMenu = () => {
 	const handleLogout = async () => {
 		await logout();
 		setDropdownOpen(false);
+		toast.success('Đăng xuất thành công!', {
+			position: 'top-right',
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+		}); // Hiển thị thông báo thành công
 		navigate('/');
 	};
 

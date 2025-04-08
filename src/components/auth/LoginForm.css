@@ -1,0 +1,30 @@
+/* src/components/auth/LoginForm.css */
+.input-field {
+	@apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white;
+}
+
+.input-field:hover {
+	@apply border-blue-400 shadow-sm;
+}
+
+.login-btn {
+	@apply w-full py-3 px-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 transition-all duration-200;
+}
+
+.social-btn {
+	@apply flex items-center justify-center w-full py-2.5 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 focus:ring-2 focus:ring-gray-200 transition-all duration-200;
+}
+
+.divider {
+	@apply flex items-center my-6;
+}
+
+.divider::before,
+.divider::after {
+	@apply flex-1 border-t border-gray-300;
+	content: '';
+}
+
+.divider-text {
+	@apply mx-4 text-sm text-gray-500 font-medium;
+}
