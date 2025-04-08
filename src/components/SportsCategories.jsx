@@ -1,12 +1,13 @@
 // src/components/SportsCategories.jsx
 import React, { useState, useEffect } from 'react';
 import ArrowDownIcon from './common/icons/ArrowDownIcon';
-import CategoryDropdown from './CategoryDropdown'; // Import CategoryDropdown
+import CategoryDropdown from './CategoryDropdown';
 
 const SportsCategories = () => {
 	const [sports, setSports] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const [openDropdownId, setOpenDropdownId] = useState(null); // Theo dõi danh mục đang mở
 
 	useEffect(() => {
 		const fetchSports = async () => {
@@ -16,7 +17,7 @@ const SportsCategories = () => {
 					throw new Error('Không thể tải danh mục môn thể thao');
 				}
 				const data = await response.json();
-				setSports(data.data); // Dữ liệu từ API: { success: true, data: [...] }
+				setSports(data.data);
 				setLoading(false);
 			} catch (err) {
 				setError(err.message || 'Không thể tải danh mục môn thể thao');
@@ -43,7 +44,11 @@ const SportsCategories = () => {
 				<ul className="flex items-center justify-center gap-10 py-3">
 					{sports.map((sport) => (
 						<li key={sport.id}>
-							<CategoryDropdown sportId={sport.id}>
+							<CategoryDropdown
+								sportId={sport.id}
+								isOpen={openDropdownId === sport.id}
+								setOpenDropdownId={setOpenDropdownId}
+							>
 								<div className="flex items-center gap-1 text-gray-800 hover:text-blue-600 font-semibold text-base uppercase transition-colors group cursor-pointer">
 									{/* Icon */}
 									<img

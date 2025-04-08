@@ -64,7 +64,7 @@ const UserMenu = () => {
 			<div
 				className={`absolute -right-12 w-56 rounded-md shadow-lg py-1 bg-transparent ring-1 ring-black ring-opacity-5 transform transition-all duration-200 ease-in-out ${
 					dropdownOpen
-						? 'opacity-100 scale-100 translate-y-0 z-10'
+						? 'opacity-100 scale-100 translate-y-0 z-50'
 						: 'opacity-0 scale-95 -translate-y-2 -z-10'
 				}`}
 			>
@@ -91,7 +91,7 @@ const UserMenu = () => {
 				</div>
 
 				{/* Menu items with icons */}
-				<div className="py-2">
+				<div className="bg-white py-2 rounded-b-md">
 					<Link
 						to="/account"
 						className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-150"
