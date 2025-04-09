@@ -62,7 +62,7 @@ const UserMenu = () => {
 
 			{/* Dropdown menu with animation */}
 			<div
-				className={`absolute -right-12 w-56 rounded-md shadow-lg py-1 bg-transparent ring-1 ring-black ring-opacity-5 transform transition-all duration-200 ease-in-out ${
+				className={`absolute -right-12 w-56 rounded-md shadow-lg py-1 bg-transparent ring-1 ring-black ring-opacity-5 transform transition-all z-50 duration-200 ease-in-out ${
 					dropdownOpen
 						? 'opacity-100 scale-100 translate-y-0 z-50'
 						: 'opacity-0 scale-95 -translate-y-2 -z-10'

@@ -25,13 +25,7 @@ const SocialLogin = () => {
 		) {
 			setIsGoogleLoading(false);
 			setIsFacebookLoading(false);
-			toast.error('Đăng nhập đã bị hủy', {
-				position: 'top-right',
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error('Đăng nhập đã bị hủy');
 		}
 	}, [isAuthPopupOpen, isGoogleLoading, isFacebookLoading]);
 

@@ -63,7 +63,7 @@ const Header = () => {
 					</div>
 				</div>
 			</div>
-			{/* Danh mục môn thể thao */}
+			{/* phần danh mục sports */}
 			<SportsCategories />
 		</header>
 	);
