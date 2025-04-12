@@ -9,10 +9,10 @@ export default defineConfig({
 			'/api': {
 				target: 'http://localhost:8000',
 				changeOrigin: true,
-				headers: {
-					Accept: 'application/json',
-					'Content-Type': 'application/json',
-				},
+				// headers: {
+				// 	Accept: 'application/json',
+				// 	'Content-Type': 'application/json',
+				// },
 			},
 		},
 	},

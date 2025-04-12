@@ -9,12 +9,15 @@ import AuthCallback from './pages/auth/AuthCallback';
 import ProtectedRoute from './components/ProtectedRoute';
 import { ToastContainer } from 'react-toastify'; // Import ToastContainer
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS của react-toastify
+import AccountPage from './pages/account/AccountPage';
 
 // Placeholder component cho các trang chưa tạo
 const Placeholder = ({ pageName }) => (
-	<div className="flex flex-col items-center justify-center py-12">
+	<div className="flex flex-col items-center justify-center py-12 mt-28">
 		<h1 className="text-3xl font-bold mb-4">{pageName}</h1>
 		<p className="text-gray-600">Trang này đang được phát triển</p>
+		<div className="h-96"></div>
+		<div className="h-96"></div>
 	</div>
 );
 
@@ -36,6 +39,14 @@ function App() {
 						element={
 							<ProtectedRoute redirectIfAuthenticated={true}>
 								<RegisterPage />
+							</ProtectedRoute>
+						}
+					/>
+					<Route
+						path="account"
+						element={
+							<ProtectedRoute>
+								<AccountPage />
 							</ProtectedRoute>
 						}
 					/>

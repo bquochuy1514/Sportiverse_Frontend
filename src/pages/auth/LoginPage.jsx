@@ -4,8 +4,7 @@ import LoginForm from '../../components/auth/LoginForm';
 import LoginBanner from '../../components/auth/LoginBanner';
 import Logo from '../../components/common/Logo';
 import loginImage from '../../assets/images/login-image.jpg';
-import MembershipBenefits from '../../components/auth/MembershipBenefits'; // Import component MembershipBenefits
-import './LoginPage.css';
+import MembershipBenefits from '../../components/auth/MembershipBenefits';
 
 const LoginPage = () => {
 	return (

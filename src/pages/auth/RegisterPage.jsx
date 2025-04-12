@@ -1,17 +1,16 @@
 // src/pages/auth/RegisterPage.jsx
 import React from 'react';
 import RegisterForm from '../../components/auth/RegisterForm';
-import LoginBanner from '../../components/auth/LoginBanner';
+import RegisterBanner from '../../components/auth/RegisterBanner';
 import Logo from '../../components/common/Logo';
 import loginImage from '../../assets/images/login-image.jpg'; // Sử dụng cùng hình ảnh với trang đăng nhập
 import MembershipBenefits from '../../components/auth/MembershipBenefits';
-import './LoginPage.css';
 
 const RegisterPage = () => {
 	return (
 		<div className="min-h-screen flex flex-col md:flex-row">
 			{/* Phần banner bên trái */}
-			<LoginBanner image={loginImage} />
+			<RegisterBanner image={loginImage} />
 
 			{/* Phần form đăng ký - có thể cuộn */}
 			<div className="w-full md:w-1/2 bg-white flex flex-col h-screen">
