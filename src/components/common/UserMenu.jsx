@@ -1,16 +1,40 @@
-// src/components/common/UserMenu.jsx
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { toast } from 'react-toastify'; // Import toast
+import { toast } from 'react-toastify';
+import { fetchCurrentUser } from '../../services/authService';
+// Import các icon từ react-icons
+import {
+	FaUser,
+	FaShoppingBag,
+	FaHeart,
+	FaSignOutAlt,
+	FaAtom,
+} from 'react-icons/fa';
 
 const UserMenu = () => {
 	const [dropdownOpen, setDropdownOpen] = useState(false);
-	const { user, logout } = useAuth();
+	const { user, setUser, logout, token } = useAuth();
+	const [isAdmin, setIsAdmin] = useState(false);
 	const dropdownRef = useRef(null);
 	const navigate = useNavigate();
 
-	// Xử lý đóng dropdown khi click ra ngoài
+	useEffect(() => {
+		const fetchUserData = async () => {
+			try {
+				const userData = await fetchCurrentUser(token);
+				setUser(userData);
+			} catch (error) {
+				console.error('Lỗi khi fetch user:', error);
+				toast.error(
+					'Không thể tải thông tin người dùng. Vui lòng thử lại sau.'
+				);
+			}
+		};
+
+		fetchUserData();
+	}, [setUser, token]);
+
 	useEffect(() => {
 		function handleClickOutside(event) {
 			if (
@@ -27,7 +51,12 @@ const UserMenu = () => {
 		};
 	}, [dropdownRef]);
 
-	// Hàm xử lý đăng xuất
+	useEffect(() => {
+		if (user?.role === 'admin') {
+			setIsAdmin(true);
+		}
+	}, [user]);
+
 	const handleLogout = async () => {
 		await logout();
 		setDropdownOpen(false);
@@ -37,7 +66,7 @@ const UserMenu = () => {
 			closeOnClick: true,
 			pauseOnHover: true,
 			draggable: true,
-		}); // Hiển thị thông báo thành công
+		});
 		navigate('/');
 	};
 
@@ -60,7 +89,6 @@ const UserMenu = () => {
 				</span>
 			</button>
 
-			{/* Dropdown menu with animation */}
 			<div
 				className={`absolute -right-12 w-56 rounded-md shadow-lg py-1 bg-transparent ring-1 ring-black ring-opacity-5 transform transition-all duration-200 ease-in-out ${
 					dropdownOpen
@@ -68,7 +96,6 @@ const UserMenu = () => {
 						: 'opacity-0 scale-95 -translate-y-2 -z-10'
 				}`}
 			>
-				{/* User info header with gradient background */}
 				<div className="relative">
 					<div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 rounded-t-md"></div>
 					<div className="relative p-4 text-white">
@@ -90,47 +117,33 @@ const UserMenu = () => {
 					</div>
 				</div>
 
-				{/* Menu items with icons */}
 				<div className="bg-white py-2 rounded-b-md">
 					<Link
 						to="/account"
 						className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-150"
 						onClick={() => setDropdownOpen(false)}
 					>
-						<svg
-							className="h-5 w-5 mr-3 text-gray-400"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth="2"
-								d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-							></path>
-						</svg>
+						<FaUser className="h-4 w-4 mr-3 text-gray-400" />
 						<span>Tài khoản của tôi</span>
 					</Link>
+
+					{isAdmin && (
+						<Link
+							to="/admin"
+							className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-150"
+							onClick={() => setDropdownOpen(false)}
+						>
+							<FaAtom className="h-4 w-4 mr-3 text-gray-400" />
+							<span>Trang quản trị website</span>
+						</Link>
+					)}
 
 					<Link
 						to="/orders"
 						className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-150"
 						onClick={() => setDropdownOpen(false)}
 					>
-						<svg
-							className="h-5 w-5 mr-3 text-gray-400"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth="2"
-								d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-							></path>
-						</svg>
+						<FaShoppingBag className="h-4 w-4 mr-3 text-gray-400" />
 						<span>Đơn hàng của tôi</span>
 					</Link>
 
@@ -139,19 +152,7 @@ const UserMenu = () => {
 						className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-150"
 						onClick={() => setDropdownOpen(false)}
 					>
-						<svg
-							className="h-5 w-5 mr-3 text-gray-400"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth="2"
-								d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-							></path>
-						</svg>
+						<FaHeart className="h-4 w-4 mr-3 text-gray-400" />
 						<span>Danh sách yêu thích</span>
 					</Link>
 
@@ -161,19 +162,7 @@ const UserMenu = () => {
 						onClick={handleLogout}
 						className="flex items-center w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150"
 					>
-						<svg
-							className="h-5 w-5 mr-3 text-red-500"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-						>
-							<path
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth="2"
-								d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-							></path>
-						</svg>
+						<FaSignOutAlt className="h-4 w-4 mr-3 text-red-500" />
 						<span>Đăng xuất</span>
 					</button>
 				</div>

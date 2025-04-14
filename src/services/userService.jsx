@@ -19,6 +19,7 @@ export async function fetchCurrentUser(token) {
 
 // Cập nhật thông tin profile
 export const updateUserProfile = async (userData) => {
+	console.log('userdata', userData);
 	try {
 		const response = await fetch('/api/user/update', {
 			method: 'POST',
@@ -27,7 +28,6 @@ export const updateUserProfile = async (userData) => {
 			},
 			body: userData,
 		});
-
 		if (!response.ok) {
 			throw new Error('Không thể cập nhật thông tin người dùng');
 		}

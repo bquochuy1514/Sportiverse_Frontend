@@ -19,14 +19,14 @@ const ProtectedRoute = ({ children, redirectIfAuthenticated = false }) => {
 	}
 
 	if (!redirectIfAuthenticated && !isAuthenticated && !token) {
-		toast.error('Vui lòng đăng nhập để truy cập trang này.', {
-			position: 'top-right',
-			autoClose: 3000,
-			hideProgressBar: false,
-			closeOnClick: true,
-			pauseOnHover: true,
-			draggable: true,
-		});
+		// toast.error('Vui lòng đăng nhập để truy cập trang này.', {
+		// 	position: 'top-right',
+		// 	autoClose: 3000,
+		// 	hideProgressBar: false,
+		// 	closeOnClick: true,
+		// 	pauseOnHover: true,
+		// 	draggable: true,
+		// });
 		return <Navigate to="/login" replace />;
 	}
 

@@ -45,27 +45,27 @@ const Sidebar = ({ avatarPreview, name }) => {
 				</div>
 
 				<div className="space-y-4">
-					<div className="p-4 bg-gradient-to-r from-teal-50 to-blue-50 rounded-xl border-l-4 border-teal-500 shadow-sm">
-						<p className="text-sm font-semibold text-teal-700">
-							Thông tin cá nhân
-						</p>
-						<p className="text-xs text-teal-600 mt-1 opacity-80">
-							Quản lý thông tin cá nhân của bạn
-						</p>
-					</div>
-
 					<Link
-						to="/change-password"
+						to="/account"
 						className="p-4 rounded-xl border-l-4 block border-gray-300 hover:border-teal-500 hover:bg-gradient-to-r hover:from-teal-50 hover:to-blue-50 cursor-pointer transition-all duration-300 shadow-sm hover:shadow"
 					>
-						<p className="text-sm font-semibold text-gray-700 flex items-center">
+						<p className="text-sm font-semibold">
+							Thông tin cá nhân
+						</p>
+						<p className="text-xs mt-1 opacity-80">
+							Quản lý thông tin cá nhân của bạn
+						</p>
+					</Link>
+
+					<div className="p-4 bg-gradient-to-r block from-teal-50 to-blue-50 rounded-xl border-l-4 border-teal-500 shadow-sm">
+						<p className="text-sm font-semibold text-teal-700 flex items-center">
 							<FaLock className="mr-2 h-4 w-4" />
 							Đổi mật khẩu
 						</p>
-						<p className="text-xs text-gray-500 mt-1">
+						<p className="text-xs text-teal-600 mt-1 opacity-80">
 							Cập nhật mật khẩu tài khoản
 						</p>
-					</Link>
+					</div>
 				</div>
 
 				<div className="mt-10 pt-6 border-t border-gray-100">

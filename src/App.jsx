@@ -10,14 +10,15 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { ToastContainer } from 'react-toastify'; // Import ToastContainer
 import 'react-toastify/dist/ReactToastify.css'; // Import CSS của react-toastify
 import AccountPage from './pages/account/AccountPage';
+import ChangePassowrd from './pages/account/changePassword';
+import ProtectedAdminRoute from './components/ProtectedAdminRoute';
+import AdminPage from './pages/admin/AdminPage';
 
 // Placeholder component cho các trang chưa tạo
 const Placeholder = ({ pageName }) => (
 	<div className="flex flex-col items-center justify-center py-12 mt-28">
 		<h1 className="text-3xl font-bold mb-4">{pageName}</h1>
 		<p className="text-gray-600">Trang này đang được phát triển</p>
-		<div className="h-96"></div>
-		<div className="h-96"></div>
 	</div>
 );
 
@@ -26,6 +27,14 @@ function App() {
 		<AuthProvider>
 			<BrowserRouter>
 				<Routes>
+					<Route
+						path="admin"
+						element={
+							<ProtectedAdminRoute>
+								<AdminPage />
+							</ProtectedAdminRoute>
+						}
+					/>
 					<Route
 						path="login"
 						element={
@@ -47,6 +56,14 @@ function App() {
 						element={
 							<ProtectedRoute>
 								<AccountPage />
+							</ProtectedRoute>
+						}
+					/>
+					<Route
+						path="change-password"
+						element={
+							<ProtectedRoute>
+								<ChangePassowrd />
 							</ProtectedRoute>
 						}
 					/>
