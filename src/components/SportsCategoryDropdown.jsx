@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { AiOutlineRight, AiOutlineClose } from 'react-icons/ai';
-import { RiFireLine } from 'react-icons/ri';
 import { BsGrid1X2 } from 'react-icons/bs';
+import FeaturedProducts from './FeaturedProducts'; // Import the new component
 
 const SportsCategoryDropdown = ({
 	activeSport,
@@ -57,6 +57,7 @@ const SportsCategoryDropdown = ({
 		}
 	}, [categories, activeSport]);
 
+	// Nếu không có activeSport, không render gì cả
 	if (!activeSport) return null;
 
 	const parentCategories =
@@ -118,7 +119,7 @@ const SportsCategoryDropdown = ({
 				<Link
 					to={`/category/${selectedCategory?.slug}`}
 					className="inline-flex items-center py-2.5 px-5 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium rounded-full hover:from-blue-700 hover:to-blue-800 shadow-sm hover:shadow transition-all"
-					onClick={() => onClose()} // Thêm sự kiện onClick
+					onClick={onClose}
 				>
 					Xem tất cả
 					<AiOutlineRight className="ml-2" />
@@ -127,28 +128,11 @@ const SportsCategoryDropdown = ({
 
 			<div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-6"></div>
 
-			<div>
-				<div className="flex items-center mb-4">
-					<RiFireLine className="text-orange-500 mr-2 text-xl" />
-					<h4 className="text-lg font-bold text-gray-800">
-						Sản phẩm nổi bật
-					</h4>
-				</div>
-
-				<div className="flex items-center justify-center h-52 bg-gray-50 rounded-lg border border-dashed border-gray-200 text-gray-400">
-					<div className="text-center p-6">
-						<div className="w-12 h-12 mb-4 bg-gray-100 rounded-full mx-auto flex items-center justify-center">
-							<AiOutlineClose className="w-6 h-6 text-gray-300" />
-						</div>
-						<p className="text-sm font-medium">
-							Khu vực hiển thị sản phẩm nổi bật
-						</p>
-						<p className="text-xs text-gray-500 mt-1">
-							Sẽ được triển khai trong tương lai
-						</p>
-					</div>
-				</div>
-			</div>
+			{/* Sử dụng component FeaturedProducts mới */}
+			<FeaturedProducts
+				categoryId={selectedCategory?.id}
+				categorySlug={selectedCategory?.slug}
+			/>
 		</div>
 	);
 
@@ -160,7 +144,7 @@ const SportsCategoryDropdown = ({
 				onClick={onClose}
 			/>
 
-			<div className="absolute top-2 left-16 right-16 h-[550px] bg-white shadow-2xl border border-gray-100 z-30 rounded-2xl overflow-hidden animate-fadeIn">
+			<div className="absolute top-2 left-16 right-16 h-[550px] bg-white shadow-2xl border border-gray-100 rounded-2xl overflow-hidden animate-fadeIn z-30">
 				{/* Header */}
 				<div className="flex items-center justify-between p-5 border-b bg-gradient-to-r from-blue-50 to-white">
 					<div className="flex items-center">
@@ -186,7 +170,7 @@ const SportsCategoryDropdown = ({
 				{/* Content */}
 				<div className="flex h-full">
 					{/* Sidebar danh mục */}
-					<div className="w-1/4 py-5 px-5 border-r h-[calc(550px-70px)] overflow-y-auto Solbg-gradient-to-b from-gray-50 to-white custom-scrollbar">
+					<div className="w-1/4 py-5 px-5 border-r h-[calc(550px-70px)] overflow-y-auto bg-gradient-to-b from-gray-50 to-white custom-scrollbar">
 						<div className="flex justify-between items-center mb-4">
 							<h3 className="text-base font-bold uppercase text-gray-700 tracking-wide">
 								Danh mục
@@ -194,7 +178,7 @@ const SportsCategoryDropdown = ({
 							<Link
 								to={`/sports/${activeSport.slug}`}
 								className="text-xs text-blue-600 hover:text-blue-800 uppercase font-medium flex items-center"
-								onClick={() => onClose()} // Thêm sự kiện onClick
+								onClick={onClose}
 							>
 								Xem tất cả
 								<AiOutlineRight className="w-3 h-3 ml-1" />

@@ -1,23 +1,38 @@
-// ProductList.jsx
-import React, { useState } from 'react';
-import {
-	FiTrash2,
-	FiEdit,
-	FiEye,
-	FiTag,
-	FiPackage,
-	FiDollarSign,
-	FiAlertCircle,
-	FiSearch,
-} from 'react-icons/fi';
+import React, { useState, useEffect } from 'react';
+import { FiAlertCircle, FiSearch, FiPackage } from 'react-icons/fi';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import ProductTable from './ProductTable';
+import { fetchSpecificSports } from '../../../services/productService';
 
 const ProductList = ({ products, onProductDeleted }) => {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const [productToDelete, setProductToDelete] = useState(null);
+	const [enrichedProducts, setEnrichedProducts] = useState([]); // Danh sách sản phẩm đã gắn sport
+	const navigate = useNavigate();
 
-	// Get primary image for a product
+	// Lấy dữ liệu môn thể thao và gắn vào sản phẩm
+	useEffect(() => {
+		const enrichProducts = async () => {
+			try {
+				const sportPromises = products.map(async (product) => {
+					const sportData = await fetchSpecificSports(
+						product.category.sport_id
+					);
+					return { ...product, sport: sportData.data }; // Gắn sport vào product
+				});
+				const enriched = await Promise.all(sportPromises);
+				setEnrichedProducts(enriched);
+			} catch (error) {
+				console.error('Error enriching products with sports:', error);
+				setEnrichedProducts(products); // Fallback nếu lỗi
+			}
+		};
+
+		enrichProducts();
+	}, [products]);
+
 	const getPrimaryImage = (images) => {
 		const primary = images.find((img) => img.is_primary);
 		return primary
@@ -25,13 +40,11 @@ const ProductList = ({ products, onProductDeleted }) => {
 			: images[0]?.image_path || 'https://via.placeholder.com/100';
 	};
 
-	// Handle delete confirmation
 	const confirmDelete = (product) => {
 		setProductToDelete(product);
 		setShowDeleteModal(true);
 	};
 
-	// Handle delete product
 	const handleDeleteProduct = async () => {
 		try {
 			const response = await fetch(
@@ -50,7 +63,7 @@ const ProductList = ({ products, onProductDeleted }) => {
 				toast.success('Xóa sản phẩm thành công!');
 				setShowDeleteModal(false);
 				if (onProductDeleted) {
-					await onProductDeleted(); // Gọi fetchProducts để lấy danh sách mới
+					await onProductDeleted();
 				}
 			} else {
 				const errorData = await response.json();
@@ -66,12 +79,19 @@ const ProductList = ({ products, onProductDeleted }) => {
 		}
 	};
 
-	// Filter products based on search term
-	const filteredProducts = products.filter(
+	const handleViewProduct = (productId) => {
+		navigate(`/admin/products/${productId}`);
+	};
+
+	const filteredProducts = enrichedProducts.filter(
 		(product) =>
 			product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
 			(product.category?.name &&
 				product.category.name
+					.toLowerCase()
+					.includes(searchTerm.toLowerCase())) ||
+			(product.sport?.name &&
+				product.sport.name
 					.toLowerCase()
 					.includes(searchTerm.toLowerCase()))
 	);
@@ -111,184 +131,14 @@ const ProductList = ({ products, onProductDeleted }) => {
 					</p>
 				</div>
 			) : (
-				<div className="bg-white rounded-xl shadow-lg overflow-hidden">
-					<div className="overflow-x-auto">
-						<table className="min-w-full divide-y divide-gray-200">
-							<thead className="bg-gray-50">
-								<tr>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-										<div className="flex items-center">
-											<FiPackage className="mr-2" />
-											Ảnh
-										</div>
-									</th>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-										<div className="flex items-center">
-											<FiTag className="mr-2" />
-											Tên Sản Phẩm
-										</div>
-									</th>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-										Danh Mục
-									</th>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-										<div className="flex items-center">
-											<FiDollarSign className="mr-2" />
-											Giá
-										</div>
-									</th>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-										Tồn Kho
-									</th>
-									<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-										Trạng Thái
-									</th>
-									<th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-										Thao Tác
-									</th>
-								</tr>
-							</thead>
-							<tbody className="bg-white divide-y divide-gray-200">
-								{filteredProducts.map((product) => (
-									<tr
-										key={product.id}
-										className="hover:bg-gray-50 transition-colors"
-									>
-										<td className="px-6 py-4 whitespace-nowrap">
-											<img
-												src={getPrimaryImage(
-													product.images
-												)}
-												alt={product.name}
-												className="h-16 w-16 object-cover rounded-lg shadow-sm border border-gray-200"
-											/>
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap">
-											<div className="text-sm font-medium text-gray-900 hover:text-indigo-600 transition-colors">
-												{product.name}
-											</div>
-											<div className="text-xs text-gray-500 mt-1 truncate max-w-xs">
-												{product.description?.substring(
-													0,
-													60
-												) || 'Không có mô tả'}
-												{product.description?.length >
-												60
-													? '...'
-													: ''}
-											</div>
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-											<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-												{product.category?.name ||
-													'N/A'}
-											</span>
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap">
-											{product.sale_price > 0 ? (
-												<div>
-													<div className="line-through text-xs text-gray-400">
-														{new Intl.NumberFormat(
-															'vi-VN',
-															{
-																style: 'currency',
-																currency: 'VND',
-															}
-														).format(product.price)}
-													</div>
-													<div className="text-sm font-medium text-red-600">
-														{new Intl.NumberFormat(
-															'vi-VN',
-															{
-																style: 'currency',
-																currency: 'VND',
-															}
-														).format(
-															product.sale_price
-														)}
-													</div>
-												</div>
-											) : (
-												<div className="text-sm font-medium text-gray-900">
-													{new Intl.NumberFormat(
-														'vi-VN',
-														{
-															style: 'currency',
-															currency: 'VND',
-														}
-													).format(product.price)}
-												</div>
-											)}
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap">
-											<span
-												className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-													product.stock_quantity > 10
-														? 'bg-green-100 text-green-800'
-														: product.stock_quantity >
-														  0
-														? 'bg-yellow-100 text-yellow-800'
-														: 'bg-red-100 text-red-800'
-												}`}
-											>
-												{product.stock_quantity} sản
-												phẩm
-											</span>
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm">
-											<div className="flex flex-col space-y-1">
-												<span
-													className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-														product.is_active
-															? 'bg-green-100 text-green-800'
-															: 'bg-red-100 text-red-800'
-													}`}
-												>
-													{product.is_active
-														? 'Kích hoạt'
-														: 'Ẩn'}
-												</span>
-												{product.is_featured && (
-													<span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-														Nổi bật
-													</span>
-												)}
-											</div>
-										</td>
-										<td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
-											<div className="flex justify-center space-x-2">
-												<button
-													className="text-indigo-600 hover:text-indigo-900 p-1 rounded-full hover:bg-indigo-100 transition-colors"
-													title="Xem chi tiết"
-												>
-													<FiEye className="h-5 w-5" />
-												</button>
-												<button
-													className="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-100 transition-colors"
-													title="Chỉnh sửa"
-												>
-													<FiEdit className="h-5 w-5" />
-												</button>
-												<button
-													className="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-100 transition-colors"
-													title="Xóa sản phẩm"
-													onClick={() =>
-														confirmDelete(product)
-													}
-												>
-													<FiTrash2 className="h-5 w-5" />
-												</button>
-											</div>
-										</td>
-									</tr>
-								))}
-							</tbody>
-						</table>
-					</div>
-				</div>
+				<ProductTable
+					products={filteredProducts}
+					onViewProduct={handleViewProduct}
+					onConfirmDelete={confirmDelete}
+					getPrimaryImage={getPrimaryImage}
+				/>
 			)}
 
-			{/* Delete Confirmation Modal */}
 			{showDeleteModal && (
 				<div className="fixed z-10 inset-0 overflow-y-auto">
 					<div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -298,14 +148,12 @@ const ProductList = ({ products, onProductDeleted }) => {
 						>
 							<div className="absolute inset-0 bg-gray-500 opacity-75"></div>
 						</div>
-
 						<span
 							className="hidden sm:inline-block sm:align-middle sm:h-screen"
 							aria-hidden="true"
 						>
 							&#8203;
 						</span>
-
 						<div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
 							<div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
 								<div className="sm:flex sm:items-start">

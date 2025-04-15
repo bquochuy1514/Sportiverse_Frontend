@@ -15,5 +15,7 @@ export default defineConfig({
 				// },
 			},
 		},
+		allowedHosts: 'all',
 	},
+	base: '/',
 });

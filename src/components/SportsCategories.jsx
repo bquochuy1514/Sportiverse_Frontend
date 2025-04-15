@@ -3,7 +3,7 @@ import { FiChevronDown } from 'react-icons/fi';
 import SportsCategoryDropdown from './SportsCategoryDropdown';
 
 // Sử dụng forwardRef để nhận ref từ component cha
-const SportsCategories = forwardRef(({ headerHeight }) => {
+const SportsCategories = forwardRef(({ headerHeight }, ref) => {
 	const [sports, setSports] = useState([]);
 	const [categories, setCategories] = useState([]);
 	const [activeSportId, setActiveSportId] = useState(null);
@@ -15,10 +15,14 @@ const SportsCategories = forwardRef(({ headerHeight }) => {
 	const activeSport = sports.find((sport) => sport.id === activeSportId);
 
 	// Expose hàm handleCloseDropdown qua ref
-
 	const closeDropdown = () => {
 		setActiveSportId(null);
 	};
+
+	// Thêm ref để export phương thức
+	React.useImperativeHandle(ref, () => ({
+		closeDropdown,
+	}));
 
 	useEffect(() => {
 		const fetchSports = async () => {
@@ -38,7 +42,11 @@ const SportsCategories = forwardRef(({ headerHeight }) => {
 	}, []);
 
 	useEffect(() => {
-		if (!activeSportId) return;
+		if (!activeSportId) {
+			setCategories([]);
+			return;
+		}
+
 		const fetchCategories = async () => {
 			try {
 				setIsLoadingCategories(true);
@@ -73,6 +81,7 @@ const SportsCategories = forwardRef(({ headerHeight }) => {
 				setActiveSportId(null);
 			}
 		};
+
 		document.addEventListener('mousedown', handleClickOutside);
 		return () =>
 			document.removeEventListener('mousedown', handleClickOutside);
@@ -169,19 +178,21 @@ const SportsCategories = forwardRef(({ headerHeight }) => {
 					</ul>
 				</div>
 			</nav>
-			{activeSportId && (
-				<div className="dropdown-content">
-					<SportsCategoryDropdown
-						activeSport={activeSport}
-						categories={categories}
-						isLoading={isLoadingCategories}
-						headerHeight={headerHeight}
-						onClose={closeDropdown}
-					/>
-				</div>
-			)}
+			{/* Sử dụng điều kiện rendering để loại bỏ hoàn toàn khỏi DOM khi không hiển thị */}
+			{activeSportId && activeSport ? (
+				<SportsCategoryDropdown
+					activeSport={activeSport}
+					categories={categories}
+					isLoading={isLoadingCategories}
+					headerHeight={headerHeight}
+					onClose={closeDropdown}
+				/>
+			) : null}
 		</>
 	);
 });
+
+// Thêm displayName để tránh cảnh báo khi sử dụng forwardRef
+SportsCategories.displayName = 'SportsCategories';
 
 export default SportsCategories;

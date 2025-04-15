@@ -1,4 +1,3 @@
-// src/App.jsx
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
@@ -7,12 +6,14 @@ import RegisterPage from './pages/auth/RegisterPage';
 import MainLayout from './components/layout/MainLayout';
 import AuthCallback from './pages/auth/AuthCallback';
 import ProtectedRoute from './components/ProtectedRoute';
-import { ToastContainer } from 'react-toastify'; // Import ToastContainer
-import 'react-toastify/dist/ReactToastify.css'; // Import CSS của react-toastify
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import AccountPage from './pages/account/AccountPage';
 import ChangePassowrd from './pages/account/changePassword';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 import AdminPage from './pages/admin/AdminPage';
+import ProductDetail from './pages/admin/ProductManagement/ProductDetail';
+import HomePage from './pages/Home/HomePage'; // Import trang chủ mới
 
 // Placeholder component cho các trang chưa tạo
 const Placeholder = ({ pageName }) => (
@@ -32,6 +33,14 @@ function App() {
 						element={
 							<ProtectedAdminRoute>
 								<AdminPage />
+							</ProtectedAdminRoute>
+						}
+					/>
+					<Route
+						path="admin/products/:productId"
+						element={
+							<ProtectedAdminRoute>
+								<ProductDetail />
 							</ProtectedAdminRoute>
 						}
 					/>
@@ -69,10 +78,8 @@ function App() {
 					/>
 					<Route path="/auth/callback" element={<AuthCallback />} />
 					<Route path="/" element={<MainLayout />}>
-						<Route
-							index
-							element={<Placeholder pageName="Trang chủ" />}
-						/>
+						<Route index element={<HomePage />} />{' '}
+						{/* Thêm trang chủ tại đường dẫn mặc định */}
 						<Route
 							path="*"
 							element={
@@ -82,15 +89,15 @@ function App() {
 					</Route>
 				</Routes>
 				<ToastContainer
-					position="top-right" // Vị trí của thông báo
-					autoClose={5000} // Tự động đóng sau 3 giây
-					hideProgressBar={false} // Hiển thị thanh tiến trình
-					newestOnTop={false} // Thông báo mới không đè lên thông báo cũ
-					closeOnClick // Đóng khi nhấp vào thông báo
-					rtl={false} // Không hỗ trợ viết từ phải sang trái
-					pauseOnFocusLoss // Tạm dừng khi cửa sổ mất focus
-					draggable // Cho phép kéo thông báo
-					pauseOnHover // Tạm dừng khi di chuột qua
+					position="top-right"
+					autoClose={5000}
+					hideProgressBar={false}
+					newestOnTop={false}
+					closeOnClick
+					rtl={false}
+					pauseOnFocusLoss
+					draggable
+					pauseOnHover
 				/>
 			</BrowserRouter>
 		</AuthProvider>

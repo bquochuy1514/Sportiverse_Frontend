@@ -21,6 +21,28 @@ export const fetchSports = async () => {
 	}
 };
 
+export const fetchSpecificSports = async (id) => {
+	try {
+		const response = await fetch(`/api/sports/${id}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				Accept: 'application/json',
+			},
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+		}
+
+		const data = await response.json();
+		return data; // Giả sử: { success: true, data: [{ id, name }, ...] }
+	} catch (error) {
+		console.error('Error fetching sports:', error);
+		throw error;
+	}
+};
+
 // Service lấy danh sách parent categories
 export const fetchParentCategories = async () => {
 	try {
