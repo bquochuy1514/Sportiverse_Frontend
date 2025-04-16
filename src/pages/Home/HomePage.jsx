@@ -2,13 +2,14 @@ import React from 'react';
 import HomeBanner from '../../components/home/HomeBanner';
 import '../../styles/banner.css'; // Import CSS animations
 import SportCategory from '../../components/home/SportCategory';
+import FeaturedProducts from '../../components/home/FeaturedProducts';
 
 const HomePage = () => {
 	return (
-		<div className="space-y-12 pt-4">
-			{/* Sử dụng component HomeBanner */}
+		<div className="pt-4">
 			<HomeBanner />
 			<SportCategory />
+			<FeaturedProducts />
 			{/* Phần còn lại của trang chủ sẽ được thêm vào sau */}
 		</div>
 	);

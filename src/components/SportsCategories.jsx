@@ -19,10 +19,18 @@ const SportsCategories = forwardRef(({ headerHeight }, ref) => {
 		setActiveSportId(null);
 	};
 
-	// Thêm ref để export phương thức
-	React.useImperativeHandle(ref, () => ({
-		closeDropdown,
-	}));
+	// Truyền phương thức closeDropdown ra ngoài thông qua ref
+	// để component cha có thể đóng dropdown khi cần
+	useEffect(() => {
+		if (ref) {
+			// Kiểm tra xem ref có tồn tại không
+			if (typeof ref === 'function') {
+				ref({ closeDropdown });
+			} else {
+				ref.current = { closeDropdown };
+			}
+		}
+	}, [ref]);
 
 	useEffect(() => {
 		const fetchSports = async () => {
@@ -42,11 +50,7 @@ const SportsCategories = forwardRef(({ headerHeight }, ref) => {
 	}, []);
 
 	useEffect(() => {
-		if (!activeSportId) {
-			setCategories([]);
-			return;
-		}
-
+		if (!activeSportId) return;
 		const fetchCategories = async () => {
 			try {
 				setIsLoadingCategories(true);
@@ -81,7 +85,6 @@ const SportsCategories = forwardRef(({ headerHeight }, ref) => {
 				setActiveSportId(null);
 			}
 		};
-
 		document.addEventListener('mousedown', handleClickOutside);
 		return () =>
 			document.removeEventListener('mousedown', handleClickOutside);
@@ -141,7 +144,7 @@ const SportsCategories = forwardRef(({ headerHeight }, ref) => {
 								>
 									<img
 										src={sport.icon}
-										className={`w-5 h-5 mr-1.5 transition-all ${
+										className={`w-7 h-7 mr-1.5 transition-all ${
 											activeSportId === sport.id
 												? 'brightness-110'
 												: 'opacity-90'
@@ -178,21 +181,22 @@ const SportsCategories = forwardRef(({ headerHeight }, ref) => {
 					</ul>
 				</div>
 			</nav>
-			{/* Sử dụng điều kiện rendering để loại bỏ hoàn toàn khỏi DOM khi không hiển thị */}
-			{activeSportId && activeSport ? (
-				<SportsCategoryDropdown
-					activeSport={activeSport}
-					categories={categories}
-					isLoading={isLoadingCategories}
-					headerHeight={headerHeight}
-					onClose={closeDropdown}
-				/>
-			) : null}
+
+			{/* Chỉ render SportsCategoryDropdown khi activeSportId có giá trị */}
+			{activeSportId !== null && (
+				<div className="dropdown-content">
+					<SportsCategoryDropdown
+						key={activeSportId}
+						activeSport={activeSport}
+						categories={categories}
+						isLoading={isLoadingCategories}
+						headerHeight={headerHeight}
+						onClose={closeDropdown}
+					/>
+				</div>
+			)}
 		</>
 	);
 });
-
-// Thêm displayName để tránh cảnh báo khi sử dụng forwardRef
-SportsCategories.displayName = 'SportsCategories';
 
 export default SportsCategories;

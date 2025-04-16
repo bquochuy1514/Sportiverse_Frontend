@@ -25,6 +25,7 @@ const ProductManagement = () => {
 	const [selectedParentId, setSelectedParentId] = useState('');
 	const [products, setProducts] = useState([]);
 	const [formData, setFormData] = useState({
+		sport_id: '',
 		category_id: '',
 		name: '',
 		description: '',
@@ -156,6 +157,8 @@ const ProductManagement = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
+		console.log(formData);
+
 		// Validate required fields
 		if (!formData.name.trim()) {
 			toast.error('Vui lòng nhập tên sản phẩm');
@@ -193,6 +196,7 @@ const ProductManagement = () => {
 		}
 
 		const submitData = new FormData();
+		submitData.append('sport_id', formData.sport_id);
 		submitData.append('category_id', formData.category_id);
 		submitData.append('name', formData.name);
 		submitData.append('description', formData.description || '');
@@ -236,6 +240,7 @@ const ProductManagement = () => {
 				fetchProducts(); // Gọi lại fetchProducts để lấy danh sách mới nhất
 				// Reset form
 				setFormData({
+					sport_id: selectedSportId || '',
 					category_id: '',
 					name: '',
 					description: '',

@@ -35,6 +35,7 @@ const BasicInfoSection = ({
 							value={selectedSportId}
 							onChange={(e) => {
 								setSelectedSportId(e.target.value);
+								formData.sport_id = e.target.value;
 							}}
 						>
 							<option value="">--Chọn thể thao--</option>

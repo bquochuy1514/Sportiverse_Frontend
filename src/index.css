@@ -62,3 +62,8 @@
 .scrolling ::-webkit-scrollbar-thumb {
 	box-shadow: 0 0 10px rgba(45, 212, 191, 0.7); /* Teal glow */
 }
+
+.text-xxs {
+	font-size: 0.65rem;
+	line-height: 1rem;
+}

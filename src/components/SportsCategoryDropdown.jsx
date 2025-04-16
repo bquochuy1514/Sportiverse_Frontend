@@ -57,7 +57,7 @@ const SportsCategoryDropdown = ({
 		}
 	}, [categories, activeSport]);
 
-	// Nếu không có activeSport, không render gì cả
+	// Nếu không có activeSport thì không render component
 	if (!activeSport) return null;
 
 	const parentCategories =
@@ -81,52 +81,35 @@ const SportsCategoryDropdown = ({
 		</div>
 	);
 
-	const EmptySelection = () => (
-		<div className="flex flex-col items-center justify-center h-full text-gray-400">
-			<div className="w-24 h-24 mb-6 bg-gray-100 rounded-full flex items-center justify-center">
-				<BsGrid1X2 className="w-12 h-12 text-gray-300" />
-			</div>
-			<p className="text-lg font-medium mb-2">
-				Chọn một danh mục để xem chi tiết
-			</p>
-			<p className="text-sm text-gray-500 text-center max-w-md">
-				Khám phá các sản phẩm, giải đấu và thông tin mới nhất trong danh
-				mục bạn quan tâm
-			</p>
-		</div>
-	);
-
 	const CategoryDetail = () => (
 		<div>
-			<div className="flex items-center justify-between mb-5">
+			<div className="flex items-center justify-between mb-4">
 				<div className="flex items-center">
-					<div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-3 shadow-md">
-						<span className="text-white font-bold text-lg">
+					<div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 rounded-md flex items-center justify-center mr-3 shadow-md">
+						<span className="text-white font-bold text-base">
 							{selectedCategory?.name?.charAt(0) || ''}
 						</span>
 					</div>
 					<div>
-						<h3 className="text-2xl font-extrabold text-gray-800 tracking-tight">
-							{selectedCategory?.name || ''}
+						<h3 className="text-xl font-bold text-gray-800 tracking-tight">
+							Sản phẩm nổi bật của:{' '}
+							<span className="text-blue-600">
+								{selectedCategory?.name || ''}
+							</span>
 						</h3>
-						{selectedCategory?.description && (
-							<p className="text-gray-500 mt-1 text-sm">
-								{selectedCategory.description}
-							</p>
-						)}
 					</div>
 				</div>
 				<Link
 					to={`/category/${selectedCategory?.slug}`}
-					className="inline-flex items-center py-2.5 px-5 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-medium rounded-full hover:from-blue-700 hover:to-blue-800 shadow-sm hover:shadow transition-all"
+					className="inline-flex items-center py-2 px-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-full hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transition-all duration-200 text-sm group"
 					onClick={onClose}
 				>
 					Xem tất cả
-					<AiOutlineRight className="ml-2" />
+					<AiOutlineRight className="ml-1.5 group-hover:translate-x-0.5 transition-transform" />
 				</Link>
 			</div>
 
-			<div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-6"></div>
+			<div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent mb-4"></div>
 
 			{/* Sử dụng component FeaturedProducts mới */}
 			<FeaturedProducts
@@ -138,65 +121,67 @@ const SportsCategoryDropdown = ({
 
 	return (
 		<div className="relative">
+			{/* Nền mờ khi mở dropdown - thêm hiệu ứng transition */}
 			<div
-				className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-20"
+				className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm z-20 transition-opacity duration-300"
 				style={{ top: `${headerHeight}px` }}
 				onClick={onClose}
 			/>
 
-			<div className="absolute top-2 left-16 right-16 h-[550px] bg-white shadow-2xl border border-gray-100 rounded-2xl overflow-hidden animate-fadeIn z-30">
-				{/* Header */}
-				<div className="flex items-center justify-between p-5 border-b bg-gradient-to-r from-blue-50 to-white">
+			{/* Nội dung dropdown - Thêm hiệu ứng shadow và animation */}
+			<div className="absolute top-2 left-16 right-16 h-[550px] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 rounded-xl overflow-hidden animate-fadeIn z-30">
+				{/* Header - Làm gradient đẹp hơn */}
+				<div className="flex items-center h-14 justify-between p-4 border-b bg-gradient-to-r from-blue-50 via-white to-blue-50">
 					<div className="flex items-center">
-						<div className="w-10 h-10 mr-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-md">
+						<div className="w-9 h-9 mr-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-md">
 							<img
 								src={activeSport.icon}
-								className="w-6 h-6 object-contain invert"
+								className="w-5 h-5 object-contain filter"
 								alt={activeSport.name}
 							/>
 						</div>
-						<h2 className="text-xl font-extrabold uppercase text-gray-800 tracking-wide">
+						<h2 className="text-lg font-bold uppercase text-gray-800 tracking-wide">
 							{activeSport.name}
 						</h2>
 					</div>
 					<button
-						className="text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 rounded-full transition-colors"
+						className="text-gray-500 hover:text-red-500 p-1.5 hover:bg-red-50 rounded-full transition-all duration-200"
 						onClick={onClose}
 					>
-						<AiOutlineClose className="h-5 w-5" />
+						<AiOutlineClose className="h-4 w-4" />
 					</button>
 				</div>
 
-				{/* Content */}
+				{/* Content - Cải thiện bố cục và màu sắc */}
 				<div className="flex h-full">
-					{/* Sidebar danh mục */}
-					<div className="w-1/4 py-5 px-5 border-r h-[calc(550px-70px)] overflow-y-auto bg-gradient-to-b from-gray-50 to-white custom-scrollbar">
-						<div className="flex justify-between items-center mb-4">
-							<h3 className="text-base font-bold uppercase text-gray-700 tracking-wide">
+					{/* Sidebar danh mục - Cải thiện màu nền và style */}
+					<div className="w-1/4 py-4 px-4 border-r h-[calc(550px-56px)] overflow-y-auto bg-gradient-to-b from-gray-50 to-white custom-scrollbar">
+						<div className="flex justify-between items-center mb-3">
+							<h3 className="text-sm font-bold uppercase text-gray-700 tracking-wide">
 								Danh mục
 							</h3>
 							<Link
 								to={`/sports/${activeSport.slug}`}
-								className="text-xs text-blue-600 hover:text-blue-800 uppercase font-medium flex items-center"
+								className="text-xs text-blue-600 hover:text-blue-800 uppercase font-medium flex items-center group"
 								onClick={onClose}
 							>
 								Xem tất cả
-								<AiOutlineRight className="w-3 h-3 ml-1" />
+								<AiOutlineRight className="w-3 h-3 ml-1 group-hover:translate-x-0.5 transition-transform" />
 							</Link>
 						</div>
 
-						{/* Danh sách tất cả danh mục */}
+						{/* Danh sách danh mục - Cải thiện giao diện */}
 						{isLoading || isLoadingChildren ? (
 							<LoadingSkeleton />
 						) : (
-							<div className="space-y-6">
+							<div className="space-y-4">
 								{parentCategories.length > 0 ? (
 									parentCategories.map((parent) => (
-										<div key={parent.id} className="mb-4">
-											<h4 className="text-sm font-semibold uppercase text-gray-500 tracking-wider py-2 border-b border-gray-100 mb-2">
+										<div key={parent.id} className="mb-3">
+											<h4 className="text-xs font-semibold uppercase text-gray-500 tracking-wider py-2 border-b border-gray-100 mb-2">
 												{parent.name}
 											</h4>
-											<ul className="space-y-1 pl-2">
+											<ul className="space-y-0.5 pl-1">
 												{parentChildMap[parent.id]
 													?.length > 0 ? (
 													parentChildMap[
@@ -204,10 +189,10 @@ const SportsCategoryDropdown = ({
 													].map((child) => (
 														<li key={child.id}>
 															<div
-																className={`flex items-center py-3 px-4 rounded-lg cursor-pointer transition-all ${
+																className={`flex items-center py-2 px-3 rounded-md cursor-pointer transition-all duration-200 ${
 																	selectedCategory?.id ===
 																	child.id
-																		? 'bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 font-semibold shadow-sm'
+																		? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium shadow-sm'
 																		: 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
 																}`}
 																onClick={() =>
@@ -216,14 +201,14 @@ const SportsCategoryDropdown = ({
 																	)
 																}
 															>
-																<span className="font-medium text-md">
+																<span className="font-medium text-sm">
 																	{child.name}
 																</span>
 															</div>
 														</li>
 													))
 												) : (
-													<li className="py-2 px-4 text-gray-400 italic text-sm">
+													<li className="py-2 px-3 text-gray-400 italic text-xs">
 														Không có danh mục con
 													</li>
 												)}
@@ -231,7 +216,7 @@ const SportsCategoryDropdown = ({
 										</div>
 									))
 								) : (
-									<div className="py-4 px-4 text-gray-500 text-center">
+									<div className="py-3 px-3 text-gray-500 text-center text-sm">
 										Không có danh mục nào
 									</div>
 								)}
@@ -239,12 +224,41 @@ const SportsCategoryDropdown = ({
 						)}
 					</div>
 
-					{/* Nội dung bên phải */}
-					<div className="w-3/4 p-7 h-[calc(550px-70px)] overflow-y-auto custom-scrollbar">
+					{/* Nội dung bên phải - Cải thiện padding và space */}
+					<div className="w-3/4 p-6 h-[calc(550px-56px)] overflow-y-auto custom-scrollbar">
 						{selectedCategory ? (
 							<CategoryDetail />
 						) : (
-							<EmptySelection />
+							<div>
+								<div className="flex items-center justify-between">
+									<div className="flex items-center">
+										<div>
+											<h3 className="text-xl font-bold text-gray-800 tracking-tight">
+												Sản phẩm nổi bật của:{' '}
+												<span className="text-blue-600">
+													{activeSport.name}
+												</span>
+											</h3>
+										</div>
+									</div>
+									<Link
+										to={`/sports/${activeSport.slug}`}
+										className="inline-flex items-center py-2 px-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-full hover:from-blue-600 hover:to-blue-700 shadow-sm hover:shadow-md transition-all duration-200 text-sm"
+										onClick={onClose}
+									>
+										Xem tất cả
+										<AiOutlineRight className="ml-1.5 group-hover:translate-x-0.5 transition-transform" />
+									</Link>
+								</div>
+
+								<div className="w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-4"></div>
+
+								{/* Sử dụng component FeaturedProducts với sportId */}
+								<FeaturedProducts
+									sportId={activeSport.id}
+									sportSlug={activeSport.slug}
+								/>
+							</div>
 						)}
 					</div>
 				</div>
