@@ -128,10 +128,10 @@ const SportsCategories = forwardRef(({ headerHeight }, ref) => {
 		<>
 			<nav
 				ref={navRef}
-				className="border-t border-b border-gray-200 bg-white shadow-sm sticky top-0 z-10 sports-navbar"
+				className="border-t border-b border-gray-200 bg-white shadow-sm sticky top-0 sports-navbar"
 			>
 				<div className="container mx-auto">
-					<ul className="flex items-center justify-center h-12">
+					<ul className="flex items-center justify-center h-10">
 						{sports.map((sport) => (
 							<li key={sport.id} className="relative h-full px-4">
 								<div
@@ -144,7 +144,7 @@ const SportsCategories = forwardRef(({ headerHeight }, ref) => {
 								>
 									<img
 										src={sport.icon}
-										className={`w-7 h-7 mr-1.5 transition-all ${
+										className={`w-6 h-6 mr-1.5 transition-all ${
 											activeSportId === sport.id
 												? 'brightness-110'
 												: 'opacity-90'

@@ -13,6 +13,7 @@ const FeaturedProducts = ({
 	categorySlug,
 	sportId,
 	sportSlug,
+	onClose,
 	limit = 6,
 }) => {
 	const [products, setProducts] = useState([]);
@@ -115,6 +116,7 @@ const FeaturedProducts = ({
 					<Link
 						key={product.id}
 						to={`/product/${product.slug}`}
+						onClick={onClose}
 						className="group bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 flex flex-col"
 					>
 						<div className="relative overflow-hidden bg-gray-50">

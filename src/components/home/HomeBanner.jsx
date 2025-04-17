@@ -30,20 +30,7 @@ const sportsData = [
 		title: 'Bộ sưu tập bóng đá chuyên nghiệp',
 		description:
 			'Trang bị như một nhà vô địch với dòng sản phẩm bóng đá cao cấp, từ giày chiến đấu đến đồng phục đội tuyển chính hãng và phụ kiện bảo vệ chuyên dụng.',
-		linkTo: '/sport/soccer',
-	},
-	{
-		id: '3',
-		name: 'Cầu lông',
-		icon: <GiShuttlecock />,
-		color: 'from-purple-500 to-purple-600',
-		textColor: 'text-purple-500',
-		bgGradient: 'from-purple-500/10 to-purple-600/5',
-		image: '/images/sports/badminton-banner.jpg',
-		title: 'Thiết bị cầu lông chuyên nghiệp',
-		description:
-			'Nâng cao trình độ với bộ sưu tập vợt cầu lông cao cấp, giày chuyên dụng và phụ kiện đỉnh cao được thiết kế cho cả người mới bắt đầu và vận động viên chuyên nghiệp.',
-		linkTo: '/sport/badminton',
+		linkTo: '/sports/bong-da',
 	},
 	{
 		id: '2',
@@ -56,7 +43,20 @@ const sportsData = [
 		title: 'Trang bị bóng rổ đỉnh cao',
 		description:
 			'Từ giày bóng rổ đến áo đấu NBA chính hãng, nâng cao phong độ với trang bị bóng rổ đẳng cấp thế giới và các phụ kiện được thiết kế cho sân trong nhà và ngoài trời.',
-		linkTo: '/sport/basketball',
+		linkTo: '/sports/bong-ro',
+	},
+	{
+		id: '3',
+		name: 'Cầu lông',
+		icon: <GiShuttlecock />,
+		color: 'from-purple-500 to-purple-600',
+		textColor: 'text-purple-500',
+		bgGradient: 'from-purple-500/10 to-purple-600/5',
+		image: '/images/sports/badminton-banner.jpg',
+		title: 'Thiết bị cầu lông chuyên nghiệp',
+		description:
+			'Nâng cao trình độ với bộ sưu tập vợt cầu lông cao cấp, giày chuyên dụng và phụ kiện đỉnh cao được thiết kế cho cả người mới bắt đầu và vận động viên chuyên nghiệp.',
+		linkTo: '/sports/cau-long',
 	},
 	{
 		id: '6',
@@ -69,7 +69,7 @@ const sportsData = [
 		title: 'Dụng cụ bóng chuyền chuyên nghiệp',
 		description:
 			'Chinh phục mọi trận đấu với dòng sản phẩm bóng chuyền chuyên nghiệp, từ giày có độ bám tối ưu đến đồng phục và bảo vệ đầu gối chất lượng cao cho cả sân trong nhà và bãi biển.',
-		linkTo: '/sport/volleyball',
+		linkTo: '/sports/bong-chuyen',
 	},
 	{
 		id: '5',
@@ -82,7 +82,7 @@ const sportsData = [
 		title: 'Bơi lội chuyên nghiệp',
 		description:
 			'Trang phục bơi cao cấp với khả năng giảm lực cản nước, kính bơi công nghệ chống mờ và phụ kiện bơi lội đỉnh cao giúp cải thiện thành tích và thoải mái khi tập luyện.',
-		linkTo: '/sport/swimming',
+		linkTo: '/sports/boi-loi',
 	},
 	{
 		id: '4',
@@ -95,7 +95,7 @@ const sportsData = [
 		title: 'Thiết bị tập gym & fitness',
 		description:
 			'Dụng cụ tập luyện cao cấp từ quần áo thoáng khí đến phụ kiện hỗ trợ nâng tạ, găng tay và thiết bị theo dõi hiệu suất giúp bạn đạt mục tiêu tập luyện một cách hiệu quả.',
-		linkTo: '/sport/gym',
+		linkTo: '/sports/gym',
 	},
 ];
 
@@ -302,7 +302,7 @@ const HomeBanner = () => {
 			) : (
 				<div
 					ref={bannerRef}
-					className="relative overflow-hidden shadow-xl bg-gradient-to-br from-gray-900 to-gray-800"
+					className="relative overflow-hidden shadow-xl bg-gradient-to-br from-gray-800 to-gray-700"
 					onMouseEnter={() => setIsPaused(true)}
 					onMouseLeave={() => setIsPaused(false)}
 				>
@@ -314,6 +314,7 @@ const HomeBanner = () => {
 							transition={{ ease: 'linear' }}
 						/>
 					</div>
+
 					{/* Sports Navigation Bar */}
 					<div className="absolute top-6 left-0 right-0 z-20 px-4 py-3">
 						<div className="flex justify-center items-center bg-black/30 backdrop-blur-xl rounded-full p-1.5 max-w-2xl mx-auto shadow-lg border border-white/10">
@@ -321,7 +322,7 @@ const HomeBanner = () => {
 								<motion.button
 									key={sport.id}
 									onClick={() => handleSportClick(index)}
-									className={`relative flex items-center space-x-1.5 px-3.5 py-2.5 rounded-full mx-0.5 transition-all ${
+									className={`relative flex items-center space-x-1.5 px-3 py-2 rounded-full mx-0.5 transition-all ${
 										activeIndex === index
 											? `bg-gradient-to-r ${sport.color} text-white shadow-lg`
 											: 'text-white/80 hover:text-white hover:bg-white/10'
@@ -346,11 +347,11 @@ const HomeBanner = () => {
 							))}
 						</div>
 					</div>
-					jsx
+
 					{/* Background Images with Transitions */}
 					<div
 						className="relative overflow-hidden"
-						style={{ height: 'calc(100vh - 118px)' }}
+						style={{ height: 'calc(100vh - 80px)' }}
 					>
 						<AnimatePresence mode="wait">
 							<motion.div
@@ -363,18 +364,18 @@ const HomeBanner = () => {
 							>
 								{/* Image background with advanced effects */}
 								<div className="absolute inset-0 w-full h-full">
-									{/* Overlay gradient */}
+									{/* Overlay gradient - GIẢM ĐỘ MỜ */}
 									<div
-										className={`absolute inset-0 bg-gradient-to-r ${activeSport.bgGradient} mix-blend-multiply opacity-80`}
+										className={`absolute inset-0 bg-gradient-to-r ${activeSport.bgGradient} mix-blend-multiply opacity-60`}
 									></div>
 
 									{/* Main banner image */}
 									<img
 										src={activeSport.image}
 										alt={activeSport.name}
-										className={`w-full h-full object-cover object-center transition-all duration-1000 ${
+										className={`w-full h-full object-cover object-bottom transition-all duration-1000 ${
 											imagesLoaded[activeSport.id]
-												? 'opacity-90 scale-105'
+												? 'opacity-100 scale-105 brightness-80'
 												: 'opacity-0 blur-md'
 										}`}
 										onLoad={() =>
@@ -382,15 +383,15 @@ const HomeBanner = () => {
 										}
 									/>
 
-									{/* Enhanced overlay with radial gradient */}
-									<div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40"></div>
+									{/* Enhanced overlay with radial gradient - GIẢM ĐỘ MỜ */}
+									<div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/30 to-black/20"></div>
 
 									{/* Subtle pattern overlay */}
 									<div className="absolute inset-0 bg-[url('/images/pattern-dot.png')] opacity-5"></div>
 
 									{/* Light beam effect */}
 									<div
-										className={`absolute top-0 -right-40 w-96 h-[150%] bg-gradient-to-b ${activeSport.color} opacity-10 rotate-30 transform-gpu blur-3xl`}
+										className={`absolute top-0 -right-40 w-96 h-[150%] bg-gradient-to-b ${activeSport.color} opacity-20 rotate-30 transform-gpu blur-3xl`}
 									></div>
 								</div>
 
@@ -594,13 +595,6 @@ const HomeBanner = () => {
 													>
 														Xem chi tiết
 													</Link>
-
-													<button
-														className="bg-white/10 hover:bg-white/20 rounded-lg p-2.5 transition-all"
-														title="Thêm vào giỏ hàng"
-													>
-														<FaShoppingCart className="text-white" />
-													</button>
 												</div>
 											</div>
 										</motion.div>
@@ -619,6 +613,7 @@ const HomeBanner = () => {
 							</motion.div>
 						</AnimatePresence>
 					</div>
+
 					{/* Navigation Controls - Side arrows */}
 					<button
 						onClick={goToPrevSport}
@@ -634,8 +629,9 @@ const HomeBanner = () => {
 					>
 						<FaChevronRight />
 					</button>
+
 					{/* Bottom Indicators */}
-					<div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center space-x-3 z-20">
+					<div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center space-x-3 z-20">
 						{sportsData.map((sport, index) => (
 							<button
 								key={sport.id}

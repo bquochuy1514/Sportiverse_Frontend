@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => {
 	const env = loadEnv(mode, process.cwd(), '');
 
 	return {
+		// eslint-disable-next-line no-undef
 		plugins: [react()],
 		server: {
 			proxy: {
@@ -27,7 +28,7 @@ export default defineConfig(({ mode }) => {
 				},
 			},
 			allowedHosts: [
-				'identical-grammar-centres-reed.trycloudflare.com',
+				'rated-ghost-pierre-garmin.trycloudflare.com',
 				'localhost',
 			],
 		},

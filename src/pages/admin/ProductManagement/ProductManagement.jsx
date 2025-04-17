@@ -11,6 +11,7 @@ import PriceStockSection from './PriceStockSection';
 import ImageUploadSection from './ImageUploadSection';
 import { toast } from 'react-toastify';
 import ProductList from './ProductList';
+import ProductDescription from './ProductDescription'; // Đảm bảo đường dẫn đúng
 
 const ProductManagement = () => {
 	const [selectedImages, setSelectedImages] = useState([]);
@@ -327,21 +328,41 @@ const ProductManagement = () => {
 									Mô Tả Sản Phẩm
 								</h2>
 								<div>
-									<label
-										htmlFor="description"
-										className="block text-sm font-medium text-gray-700 mb-1"
-									>
-										Mô Tả Chi Tiết
-									</label>
+									<p className="text-base text-gray-700 mb-2">
+										Bạn có thể sử dụng Markdown để định
+										dạng: **in đậm**, *in nghiêng*, # tiêu
+										đề, - danh sách, ... và các icon sẽ được
+										giữ nguyên nếu có
+									</p>
 									<textarea
 										id="description"
 										name="description"
-										rows="6"
+										rows="14"
 										className="block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
 										placeholder="Nhập mô tả đầy đủ về sản phẩm..."
 										value={formData.description}
 										onChange={handleInputChange}
+										style={{
+											whiteSpace: 'pre-wrap',
+											lineHeight: '1.6',
+										}}
 									></textarea>
+
+									{/* Thêm phần xem trước */}
+									{formData.description && (
+										<div className="mt-4">
+											<h3 className="text-sm font-medium text-gray-700 mb-2">
+												Xem trước mô tả:
+											</h3>
+											<div className="p-4 border border-gray-200 rounded-lg bg-gray-50">
+												<ProductDescription
+													description={
+														formData.description
+													}
+												/>
+											</div>
+										</div>
+									)}
 								</div>
 							</div>
 

@@ -7,12 +7,7 @@ import {
 	FiDollarSign,
 } from 'react-icons/fi';
 
-const ProductTable = ({
-	products,
-	onViewProduct,
-	onConfirmDelete,
-	getPrimaryImage,
-}) => {
+const ProductTable = ({ products, onViewProduct, onConfirmDelete }) => {
 	return (
 		<div className="bg-white rounded-xl shadow-lg overflow-hidden">
 			<div className="overflow-x-auto">
@@ -59,23 +54,17 @@ const ProductTable = ({
 							>
 								<td className="px-6 py-4 whitespace-nowrap">
 									<img
-										src={getPrimaryImage(product.images)}
+										src={product.images[0].image_path}
 										alt={product.name}
 										className="h-16 w-16 object-cover rounded-lg shadow-sm border border-gray-200"
 									/>
 								</td>
 								<td className="px-6 py-4 whitespace-nowrap">
-									<div className="text-sm font-medium text-gray-900 hover:text-indigo-600 transition-colors">
+									<div className="text-sm font-medium text-gray-900 max-w-xs hover:text-indigo-600 transition-colors truncate overflow-hidden">
 										{product.name}
 									</div>
-									<div className="text-xs text-gray-500 mt-1 truncate max-w-xs">
-										{product.description?.substring(
-											0,
-											60
-										) || 'Không có mô tả'}
-										{product.description?.length > 60
-											? '...'
-											: ''}
+									<div className="text-xs text-gray-500 mt-1 truncate max-w-xs overflow-hidden">
+										{product.description}
 									</div>
 								</td>
 								<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

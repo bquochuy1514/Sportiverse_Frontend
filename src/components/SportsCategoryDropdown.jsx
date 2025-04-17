@@ -257,6 +257,7 @@ const SportsCategoryDropdown = ({
 								<FeaturedProducts
 									sportId={activeSport.id}
 									sportSlug={activeSport.slug}
+									onClose={onClose}
 								/>
 							</div>
 						)}

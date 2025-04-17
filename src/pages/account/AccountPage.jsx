@@ -92,7 +92,7 @@ const AccountPage = () => {
 		}
 
 		try {
-			const response = await updateUserProfile(data, token);
+			const response = await updateUserProfile(data);
 			console.log('Response từ backend:', response);
 
 			// Cập nhật user trong context
@@ -100,11 +100,11 @@ const AccountPage = () => {
 				name: formData.name,
 				phone: formData.phone,
 				address: formData.address,
-				avatar: response.data.user.avatar || avatarPreview,
+				avatar: response.user.avatar || avatarPreview,
 			};
 
 			setUser(updatedUser);
-			setAvatarPreview(response.data.user.avatar || avatarPreview);
+			setAvatarPreview(response.user.avatar || avatarPreview);
 			toast.success(response.message || 'Cập nhật thông tin thành công!');
 		} catch (error) {
 			console.error('Lỗi:', error);

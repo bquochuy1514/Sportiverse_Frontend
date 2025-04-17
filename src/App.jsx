@@ -12,14 +12,18 @@ import AccountPage from './pages/account/AccountPage';
 import ChangePassowrd from './pages/account/changePassword';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 import AdminPage from './pages/admin/AdminPage';
-import ProductDetail from './pages/admin/ProductManagement/ProductDetail';
+import ProductDetailManagement from './pages/admin/ProductManagement/ProductDetailManagement';
 import HomePage from './pages/Home/HomePage'; // Import trang chủ mới
+import ProductDetail from './components/home/products/product-detail/ProductDetail';
+import ScrollToTop from './components/ScrollToTop';
+import ProductsBySport from './components/home/sports/ProductsBySport';
 
 // Placeholder component cho các trang chưa tạo
 const Placeholder = ({ pageName }) => (
 	<div className="flex flex-col items-center justify-center py-12 mt-28">
 		<h1 className="text-3xl font-bold mb-4">{pageName}</h1>
 		<p className="text-gray-600">Trang này đang được phát triển</p>
+		<div className="h-72"></div>
 	</div>
 );
 
@@ -27,6 +31,7 @@ function App() {
 	return (
 		<AuthProvider>
 			<BrowserRouter>
+				<ScrollToTop />
 				<Routes>
 					<Route
 						path="admin"
@@ -37,10 +42,10 @@ function App() {
 						}
 					/>
 					<Route
-						path="admin/products/:productId"
+						path="admin/product/:productId"
 						element={
 							<ProtectedAdminRoute>
-								<ProductDetail />
+								<ProductDetailManagement />
 							</ProtectedAdminRoute>
 						}
 					/>
@@ -79,7 +84,14 @@ function App() {
 					<Route path="/auth/callback" element={<AuthCallback />} />
 					<Route path="/" element={<MainLayout />}>
 						<Route index element={<HomePage />} />{' '}
-						{/* Thêm trang chủ tại đường dẫn mặc định */}
+						<Route
+							path="product/:slug"
+							element={<ProductDetail />}
+						/>
+						<Route
+							path="sports/:slug"
+							element={<ProductsBySport />}
+						/>
 						<Route
 							path="*"
 							element={

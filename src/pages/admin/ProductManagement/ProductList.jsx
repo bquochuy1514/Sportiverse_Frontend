@@ -33,13 +33,6 @@ const ProductList = ({ products, onProductDeleted }) => {
 		enrichProducts();
 	}, [products]);
 
-	const getPrimaryImage = (images) => {
-		const primary = images.find((img) => img.is_primary);
-		return primary
-			? primary.image_path
-			: images[0]?.image_path || 'https://via.placeholder.com/100';
-	};
-
 	const confirmDelete = (product) => {
 		setProductToDelete(product);
 		setShowDeleteModal(true);
@@ -80,7 +73,7 @@ const ProductList = ({ products, onProductDeleted }) => {
 	};
 
 	const handleViewProduct = (productId) => {
-		navigate(`/admin/products/${productId}`);
+		navigate(`/admin/product/${productId}`);
 	};
 
 	const filteredProducts = enrichedProducts.filter(
@@ -135,7 +128,6 @@ const ProductList = ({ products, onProductDeleted }) => {
 					products={filteredProducts}
 					onViewProduct={handleViewProduct}
 					onConfirmDelete={confirmDelete}
-					getPrimaryImage={getPrimaryImage}
 				/>
 			)}
 

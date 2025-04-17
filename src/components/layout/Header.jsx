@@ -41,11 +41,11 @@ const Header = forwardRef((props, ref) => {
 	return (
 		<header
 			ref={ref} // Sử dụng ref từ component cha
-			className="fixed top-0 left-0 right-0 bg-blue-50 shadow-sm border-b z-50" // Thêm z-index cao
+			className="fixed top-0 left-0 right-0 bg-blue-50 shadow-sm border-b z-30"
 		>
 			<div ref={innerHeaderRef} className="w-full">
 				<div className="container mx-auto px-4 max-w-screen-xl gap-4">
-					<div className="flex items-center justify-between h-16 gap-4">
+					<div className="flex items-center justify-between h-14 gap-4">
 						<div className="flex-shrink-0">
 							<div onClick={handleLogoClick}>
 								<Logo />

@@ -155,7 +155,7 @@ const UserMenu = () => {
 					<motion.img
 						src={user.avatar}
 						alt={user.name}
-						className="h-8 w-8 rounded-full object-cover border-2 border-blue-200 transition-all duration-200 group-hover:border-blue-400 shadow-sm"
+						className="h-7 w-7 rounded-full object-cover border-2 border-blue-200 transition-all duration-200 group-hover:border-blue-400 shadow-sm"
 						animate={
 							dropdownOpen
 								? { borderColor: '#3B82F6', scale: 1.05 }

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FiArrowLeft, FiAlertCircle, FiX } from 'react-icons/fi';
 import { toast } from 'react-toastify';
+import ProductDescription from './ProductDescription';
 
-const ProductDetail = () => {
+const ProductDetailManagement = () => {
 	const { productId } = useParams();
 	const [product, setProduct] = useState(null);
 	const [loading, setLoading] = useState(true);
@@ -204,9 +205,15 @@ const ProductDetail = () => {
 							<h2 className="text-lg font-semibold text-gray-800 mb-2">
 								Mô Tả Sản Phẩm
 							</h2>
-							<p className="text-gray-700">
-								{product.description || 'Không có mô tả.'}
-							</p>
+							<div className="text-gray-700">
+								{product.description ? (
+									<ProductDescription
+										description={product.description}
+									/>
+								) : (
+									'Không có mô tả.'
+								)}
+							</div>
 						</div>
 
 						<div className="mb-6">
@@ -266,4 +273,4 @@ const ProductDetail = () => {
 	);
 };
 
-export default ProductDetail;
+export default ProductDetailManagement;

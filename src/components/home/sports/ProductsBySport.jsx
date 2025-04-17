@@ -1,51 +1,47 @@
-// src/components/home/FeaturedProducts.jsx
+// src/components/home/ProductsBySport.jsx
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { FaShoppingCart, FaHeart, FaArrowRight, FaStar } from 'react-icons/fa';
 import { BiCheckCircle } from 'react-icons/bi';
 import { TbTruckDelivery } from 'react-icons/tb';
 
-const FeaturedProducts = () => {
+const ProductsBySport = () => {
+	const { slug } = useParams();
 	const [products, setProducts] = useState([]);
+	const [sport, setSport] = useState(null);
 	const [isLoading, setIsLoading] = useState(true);
-	const [wishlist, setWishlist] = useState([]);
+	const [error, setError] = useState(null);
 
 	useEffect(() => {
-		const fetchFeaturedProducts = async () => {
+		const fetchProductsBySport = async () => {
 			setIsLoading(true);
+			setError(null);
 			try {
-				const response = await fetch('/api/featured-products?limit=10');
+				const response = await fetch(
+					`/api/products-categories/${slug}`
+				);
 				const data = await response.json();
-				setProducts(data.data);
-
-				// Tải wishlist từ localStorage (nếu đã đăng nhập)
-				const savedWishlist = localStorage.getItem('wishlist');
-				if (savedWishlist) {
-					setWishlist(JSON.parse(savedWishlist));
+				console.log(data.products.data[0].sport);
+				if (data.success) {
+					setProducts(data.products.data || []);
+					setSport(data.products.data[0].sport || null);
+				} else {
+					setError(data.message || 'Không thể tải sản phẩm');
 				}
 			} catch (error) {
-				console.error('Error fetching featured products:', error);
+				console.error('Error fetching products by sport:', error);
+				setError('Đã xảy ra lỗi khi tải sản phẩm');
 			} finally {
 				setIsLoading(false);
 			}
 		};
 
-		fetchFeaturedProducts();
-	}, []);
-
-	const toggleWishlist = (e, productId) => {
-		e.preventDefault(); // Prevent navigation
-		e.stopPropagation(); // Stop event propagation
-
-		const updatedWishlist = wishlist.includes(productId)
-			? wishlist.filter((id) => id !== productId)
-			: [...wishlist, productId];
-
-		setWishlist(updatedWishlist);
-		localStorage.setItem('wishlist', JSON.stringify(updatedWishlist));
-	};
+		if (slug) {
+			fetchProductsBySport();
+		}
+	}, [slug]);
 
 	const formatPrice = (price) => {
 		return new Intl.NumberFormat('vi-VN', {
@@ -64,7 +60,7 @@ const FeaturedProducts = () => {
 	if (isLoading) {
 		return (
 			<section className="py-16 bg-gradient-to-br from-blue-50/50 to-white">
-				<div className="w-fit mx-auto px-4">
+				<div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="flex justify-between items-center mb-8">
 						<div className="animate-pulse bg-gray-200 h-8 w-48 rounded-lg"></div>
 						<div className="animate-pulse bg-gray-200 h-8 w-28 rounded-lg"></div>
@@ -90,6 +86,56 @@ const FeaturedProducts = () => {
 		);
 	}
 
+	// Error state
+	if (error) {
+		return (
+			<section className="py-16 bg-gradient-to-br from-blue-50/50 to-white">
+				<div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+					<div className="bg-white p-8 rounded-lg shadow-sm">
+						<h2 className="text-2xl font-bold text-gray-800 mb-4">
+							Không thể tải sản phẩm
+						</h2>
+						<p className="text-gray-600 mb-6">{error}</p>
+						<Link
+							to="/products"
+							className="inline-flex items-center bg-blue-500 text-white text-sm font-medium py-2 px-4 rounded-full shadow-sm hover:bg-blue-600 transition-all duration-300"
+						>
+							<span>Xem tất cả sản phẩm</span>
+							<FaArrowRight className="ml-2 text-xs" />
+						</Link>
+					</div>
+				</div>
+			</section>
+		);
+	}
+
+	// Empty state
+	if (products.length === 0) {
+		return (
+			<section className="py-16 bg-gradient-to-br from-blue-50/50 to-white">
+				<div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+					<div className="bg-white p-8 rounded-lg shadow-sm">
+						<h2 className="text-2xl font-bold text-gray-800 mb-4">
+							{sport
+								? `Không có sản phẩm cho môn ${sport.name}`
+								: 'Không có sản phẩm'}
+						</h2>
+						<p className="text-gray-600 mb-6">
+							Hiện tại chưa có sản phẩm nào trong danh mục này.
+						</p>
+						<Link
+							to="/products"
+							className="inline-flex items-center bg-blue-500 text-white text-sm font-medium py-2 px-4 rounded-full shadow-sm hover:bg-blue-600 transition-all duration-300"
+						>
+							<span>Xem tất cả sản phẩm</span>
+							<FaArrowRight className="ml-2 text-xs" />
+						</Link>
+					</div>
+				</div>
+			</section>
+		);
+	}
+
 	return (
 		<section className="py-12 relative overflow-hidden">
 			<div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -97,20 +143,22 @@ const FeaturedProducts = () => {
 					<div className="mb-4 md:mb-0">
 						<h2 className="text-2xl font-bold text-gray-800 relative inline-block">
 							<span className="relative z-10">
-								Sản phẩm nổi bật
+								{sport
+									? `Sản phẩm ${sport.name}`
+									: 'Sản phẩm thể thao'}
 							</span>
 							<span className="absolute -bottom-1 left-0 w-full h-1 bg-blue-500 opacity-30 rounded-full z-0"></span>
 						</h2>
 						<p className="text-sm text-gray-600 mt-2 max-w-xl">
-							Khám phá những sản phẩm chất lượng cao và được yêu
-							thích nhất của chúng tôi
+							{sport?.description ||
+								'Khám phá những sản phẩm chất lượng cao và được yêu thích nhất của chúng tôi'}
 						</p>
 					</div>
 					<Link
 						to="/products"
 						className="group flex items-center bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm font-medium py-2 px-4 rounded-full shadow-sm hover:shadow hover:from-blue-600 hover:to-blue-700 transition-all duration-300"
 					>
-						<span>Xem tất cả</span>
+						<span>Xem tất cả sản phẩm</span>
 						<FaArrowRight className="ml-2 text-xs group-hover:translate-x-1 transition-transform duration-300" />
 					</Link>
 				</div>
@@ -120,7 +168,7 @@ const FeaturedProducts = () => {
 					className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
-					transition={{ staggerChildren: 0.1 }}
+					transition={{ duration: 0.5 }}
 				>
 					{products.map((product, index) => (
 						<motion.div
@@ -144,7 +192,13 @@ const FeaturedProducts = () => {
 										className="block"
 									>
 										<img
-											src={product.images[0].image_path}
+											src={
+												product.images &&
+												product.images.length > 0
+													? product.images[0]
+															.image_path
+													: '/images/product-placeholder.jpg'
+											}
 											alt={product.name}
 											className={`w-full h-40 object-contain object-center transform group-hover:scale-110 transition-transform duration-500 ${
 												product.stock_quantity <= 0
@@ -176,17 +230,8 @@ const FeaturedProducts = () => {
 									</div>
 
 									{/* Heart icon */}
-									<button
-										onClick={(e) =>
-											toggleWishlist(e, product.id)
-										}
-										className="absolute top-2 right-2 p-1.5 rounded-full bg-white/80 text-gray-600 hover:text-red-500 hover:bg-white transition-all z-10 hover:scale-105"
-									>
-										{wishlist.includes(product.id) ? (
-											<FaHeart className="w-3.5 h-3.5 text-red-500" />
-										) : (
-											<FaHeart className="w-3.5 h-3.5" />
-										)}
+									<button className="absolute top-2 right-2 p-1.5 rounded-full bg-white/80 text-gray-600 hover:text-red-500 hover:bg-white transition-all z-10 hover:scale-105">
+										<FaHeart className="w-3.5 h-3.5" />
 									</button>
 								</div>
 
@@ -195,10 +240,15 @@ const FeaturedProducts = () => {
 									{/* Category with better style */}
 									<div className="flex justify-between items-start">
 										<Link
-											to={`/category/${product.category.slug}`}
+											to={`/category/${
+												product.category?.slug || '#'
+											}`}
 										>
 											<span className="text-xs text-blue-600 font-medium bg-blue-50 px-1.5 py-0.5 rounded-sm hover:bg-blue-100 transition-colors">
-												{`${product.sport.name} - ${product.category.name}`}
+												{product.sport?.name &&
+												product.category?.name
+													? `${product.sport.name} - ${product.category.name}`
+													: 'Danh mục'}
 											</span>
 										</Link>
 									</div>
@@ -253,8 +303,8 @@ const FeaturedProducts = () => {
 													</div>
 												)
 											) : (
-												<div className="text-xxs text-gray-500">
-													&nbsp;
+												<div className="text-xxs text-gray-500 font-medium bg-gray-50 px-1.5 py-0.5 rounded-sm">
+													Hết hàng
 												</div>
 											)}
 
@@ -306,4 +356,4 @@ const FeaturedProducts = () => {
 	);
 };
 
-export default FeaturedProducts;
+export default ProductsBySport;
