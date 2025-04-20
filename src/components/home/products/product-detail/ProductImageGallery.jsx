@@ -281,9 +281,9 @@ const ProductImageGallery = ({
 							animate={{ scale: 1, opacity: 1 }}
 							exit={{ scale: 0.9, opacity: 0 }}
 							transition={{ type: 'spring', damping: 25 }}
-							className="relative w-full max-w-6xl p-4 flex flex-col items-center justify-center"
+							className="relative w-full max-w-6xl p-10 flex flex-col items-center justify-center top-6"
 							onClick={(e) => e.stopPropagation()}
-							style={{ height: '90vh', maxHeight: '90vh' }}
+							style={{ height: '100vh', maxHeight: '100vh' }}
 						>
 							{/* Close button */}
 							<motion.button
@@ -370,13 +370,13 @@ const ProductImageGallery = ({
 							</div>
 
 							{/* Image counter/indicator */}
-							<div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-black/60 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
+							<div className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-black/60 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
 								{zoomImageIndex + 1} / {images.length}
 							</div>
 
 							{/* Thumbnail navigation - Đã chuyển xuống dưới ảnh chính */}
 							{images.length > 1 && (
-								<div className="flex justify-center gap-2 p-3 mt-4 bg-black/50 backdrop-blur-sm rounded-xl shadow-lg">
+								<div className="flex justify-center gap-2 p-3 mt-6 bg-black/50 backdrop-blur-sm rounded-xl shadow-lg">
 									{images.map((image, index) => (
 										<motion.button
 											key={index}

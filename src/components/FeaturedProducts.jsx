@@ -14,7 +14,7 @@ const FeaturedProducts = ({
 	sportId,
 	sportSlug,
 	onClose,
-	limit = 6,
+	limit = 8,
 }) => {
 	const [products, setProducts] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -26,7 +26,7 @@ const FeaturedProducts = ({
 			setIsLoading(true);
 			try {
 				// Xây dựng URL dựa trên params được truyền vào
-				let url = '/api/products?';
+				let url = '/api/featured-products?';
 
 				if (categoryId) {
 					url += `category_id=${categoryId}&`;
@@ -79,7 +79,7 @@ const FeaturedProducts = ({
 	// Các trạng thái loading và error
 	if (isLoading) {
 		return (
-			<div className="grid grid-cols-3 gap-4">
+			<div className="grid grid-cols-4 gap-4">
 				{Array(limit)
 					.fill(0)
 					.map((_, index) => (
@@ -111,7 +111,7 @@ const FeaturedProducts = ({
 	// Mặc định hiển thị grid dạng đầy đủ
 	return (
 		<>
-			<div className="grid grid-cols-3 gap-5">
+			<div className="grid grid-cols-4 gap-5">
 				{products.map((product) => (
 					<Link
 						key={product.id}
@@ -124,7 +124,7 @@ const FeaturedProducts = ({
 								<img
 									src={product.images[0].image_path}
 									alt={product.name}
-									className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+									className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500"
 								/>
 							</div>
 
@@ -228,19 +228,20 @@ const FeaturedProducts = ({
 
 			{/* Liên kết xem tất cả */}
 			{(categorySlug || sportSlug) && (
-				<div className="mt-6 text-center">
-					<Link
-						to={
-							categorySlug
-								? `/category/${categorySlug}`
-								: `/sports/${sportSlug}`
-						}
-						className="inline-flex items-center text-blue-600 font-medium hover:text-blue-800"
-					>
+				<Link
+					to={
+						categorySlug
+							? `/sports/${sportSlug}`
+							: `/sports/${sportSlug}`
+					}
+					className="mt-6 inline-block text-center bg-blue-600 w-full py-2 rounded-md font-semibold shadow-md hover:bg-blue-700 transition-colors duration-200"
+					onClick={onClose}
+				>
+					<div className="inline-flex items-center text-white font-medium">
 						Xem tất cả sản phẩm
 						<AiOutlineArrowRight className="ml-2" />
-					</Link>
-				</div>
+					</div>
+				</Link>
 			)}
 		</>
 	);

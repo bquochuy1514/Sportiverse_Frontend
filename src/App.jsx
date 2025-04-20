@@ -17,13 +17,13 @@ import HomePage from './pages/Home/HomePage'; // Import trang chủ mới
 import ProductDetail from './components/home/products/product-detail/ProductDetail';
 import ScrollToTop from './components/ScrollToTop';
 import ProductsBySport from './components/home/sports/ProductsBySport';
+import AllProducts from './pages/products/AllProducts';
 
 // Placeholder component cho các trang chưa tạo
 const Placeholder = ({ pageName }) => (
 	<div className="flex flex-col items-center justify-center py-12 mt-28">
 		<h1 className="text-3xl font-bold mb-4">{pageName}</h1>
 		<p className="text-gray-600">Trang này đang được phát triển</p>
-		<div className="h-72"></div>
 	</div>
 );
 
@@ -83,7 +83,8 @@ function App() {
 					/>
 					<Route path="/auth/callback" element={<AuthCallback />} />
 					<Route path="/" element={<MainLayout />}>
-						<Route index element={<HomePage />} />{' '}
+						<Route index element={<HomePage />} />
+						<Route path="products" element={<AllProducts />} />
 						<Route
 							path="product/:slug"
 							element={<ProductDetail />}

@@ -1,6 +1,25 @@
 import React, { useState, useEffect, useRef, forwardRef } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
+import {
+	FaFire,
+	FaRunning,
+	FaBasketballBall,
+	FaFootballBall,
+	FaSwimmer,
+	FaBiking,
+	FaStore,
+} from 'react-icons/fa';
 import SportsCategoryDropdown from './SportsCategoryDropdown';
+import { Link } from 'react-router-dom';
+
+// Array of sport icons to display
+const sportIcons = {
+	running: FaRunning,
+	basketball: FaBasketballBall,
+	football: FaFootballBall,
+	swimming: FaSwimmer,
+	cycling: FaBiking,
+};
 
 // Sử dụng forwardRef để nhận ref từ component cha
 const SportsCategories = forwardRef(({ headerHeight }, ref) => {
@@ -90,6 +109,17 @@ const SportsCategories = forwardRef(({ headerHeight }, ref) => {
 			document.removeEventListener('mousedown', handleClickOutside);
 	}, [activeSportId]);
 
+	// Function to get sport icon
+	const getSportIcon = (sportName) => {
+		const sportKey = sportName.toLowerCase();
+		for (const [key, Icon] of Object.entries(sportIcons)) {
+			if (sportKey.includes(key)) {
+				return Icon;
+			}
+		}
+		return null;
+	};
+
 	if (isLoading) {
 		return (
 			<div className="border-t border-b border-gray-200 bg-white shadow-sm">
@@ -128,56 +158,133 @@ const SportsCategories = forwardRef(({ headerHeight }, ref) => {
 		<>
 			<nav
 				ref={navRef}
-				className="border-t border-b border-gray-200 bg-white shadow-sm sticky top-0 sports-navbar"
+				className="border-t border-b border-gray-200 bg-white shadow-sm sticky top-0 z-20 sports-navbar"
 			>
 				<div className="container mx-auto">
-					<ul className="flex items-center justify-center h-10">
-						{sports.map((sport) => (
-							<li key={sport.id} className="relative h-full px-4">
-								<div
-									className={`flex items-center h-full cursor-pointer ${
-										activeSportId === sport.id
-											? 'text-blue-600'
-											: 'text-gray-700 hover:text-blue-600'
-									}`}
-									onClick={() => handleSportClick(sport.id)}
+					<ul className="flex items-center justify-center h-12">
+						{sports.map((sport) => {
+							// Try to get an icon for the sport
+							const SportIcon = getSportIcon(sport.name);
+
+							return (
+								<li
+									key={sport.id}
+									className="relative h-full mx-2"
 								>
-									<img
-										src={sport.icon}
-										className={`w-6 h-6 mr-1.5 transition-all ${
-											activeSportId === sport.id
-												? 'brightness-110'
-												: 'opacity-90'
-										}`}
-										alt={sport.name}
-									/>
-									<span
-										className={`text-sm font-medium uppercase ${
-											activeSportId === sport.id
-												? 'font-semibold'
-												: ''
-										}`}
+									<div
+										className={`group flex items-center h-full cursor-pointer transition-all duration-300 relative px-3`}
+										onClick={() =>
+											handleSportClick(sport.id)
+										}
 									>
-										{sport.name}
-									</span>
-									<FiChevronDown
-										className={`ml-1 transition-transform ${
-											activeSportId === sport.id
-												? 'transform rotate-180 text-blue-600'
-												: 'text-gray-500'
-										}`}
-										size={16}
+										{/* Sport item container with styling */}
+										<div
+											className={`absolute inset-0 rounded-lg ${
+												activeSportId === sport.id
+													? 'bg-blue-50'
+													: 'bg-transparent group-hover:bg-gray-50'
+											} transition-colors duration-300`}
+										></div>
+
+										{/* Icon */}
+										{SportIcon && (
+											<SportIcon
+												className={`mr-1.5 transition-colors duration-300 ${
+													activeSportId === sport.id
+														? 'text-blue-600'
+														: 'text-gray-500 group-hover:text-blue-500'
+												}`}
+												size={16}
+											/>
+										)}
+
+										{/* Name */}
+										<span
+											className={`text-sm font-medium uppercase tracking-wide relative z-10 ${
+												activeSportId === sport.id
+													? 'text-blue-600 font-semibold'
+													: 'text-gray-700 group-hover:text-blue-600'
+											} transition-colors duration-300`}
+										>
+											{sport.name}
+										</span>
+
+										{/* Dropdown icon */}
+										<FiChevronDown
+											className={`ml-1 -mr-2 transition-all duration-300 ${
+												activeSportId === sport.id
+													? 'transform rotate-180 text-blue-600'
+													: 'text-gray-500 group-hover:text-blue-500'
+											}`}
+											size={16}
+										/>
+
+										{/* Active indicator - Fixed straight line */}
+										<div
+											className={`absolute bottom-0 left-0 w-full h-[2px] transition-opacity duration-300 ${
+												activeSportId === sport.id
+													? 'opacity-100 bg-blue-600'
+													: 'opacity-0 group-hover:opacity-50 bg-blue-400'
+											}`}
+										></div>
+									</div>
+								</li>
+							);
+						})}
+
+						{/* All products */}
+						<li className="relative h-full mx-2">
+							<Link to="/products" className="relative h-full">
+								<div className="relative flex items-center h-full cursor-pointer px-4">
+									{/* Container with hot red background */}
+									<div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg opacity-10"></div>
+
+									{/* Fire icon */}
+									<FaStore
+										className="text-blue-600 mr-1.5"
+										size={14}
 									/>
-									<span
-										className={`absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transition-transform ${
-											activeSportId === sport.id
-												? 'scale-x-100'
-												: 'scale-x-0'
-										}`}
-									></span>
+
+									{/* Text with fixed styling */}
+									<span className="font-bold text-sm text-blue-600 uppercase">
+										Tất cả sản phẩm
+									</span>
+
+									{/* Animated dot effect */}
+									<span className="absolute -top-1 -right-1 flex h-2 w-2">
+										<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+										<span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+									</span>
 								</div>
-							</li>
-						))}
+							</Link>
+						</li>
+
+						{/* HOT SALE item */}
+						<li className="relative h-full mx-2">
+							<Link to="hot-sale" className="relative h-full">
+								<div className="relative flex items-center h-full cursor-pointer px-4">
+									{/* Container with hot red background */}
+									<div className="absolute inset-0 bg-gradient-to-r from-red-500 to-red-600 rounded-lg opacity-10"></div>
+
+									{/* Fire icon */}
+									<FaFire
+										className="text-red-600 mr-1.5"
+										size={14}
+									/>
+
+									{/* Text with fixed styling */}
+									<span className="font-bold text-sm text-red-600 uppercase">
+										HOT SALE
+									</span>
+
+									{/* Animated dot effect */}
+									<span className="absolute -top-1 -right-1 flex h-2 w-2">
+										<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+										<span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+									</span>
+								</div>
+							</Link>
+						</li>
 					</ul>
 				</div>
 			</nav>

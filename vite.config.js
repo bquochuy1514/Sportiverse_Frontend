@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
 				},
 			},
 			allowedHosts: [
-				'rated-ghost-pierre-garmin.trycloudflare.com',
+				'ruling-tragedy-hydrocodone-introduce.trycloudflare.com',
 				'localhost',
 			],
 		},

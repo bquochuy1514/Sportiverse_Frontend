@@ -12,7 +12,6 @@ import {
 	FaChevronRight,
 	FaShoppingBag,
 	FaStar,
-	FaShoppingCart,
 } from 'react-icons/fa';
 import { GiSoccerBall, GiShuttlecock } from 'react-icons/gi';
 import { IoFlash } from 'react-icons/io5';
@@ -31,6 +30,7 @@ const sportsData = [
 		description:
 			'Trang bị như một nhà vô địch với dòng sản phẩm bóng đá cao cấp, từ giày chiến đấu đến đồng phục đội tuyển chính hãng và phụ kiện bảo vệ chuyên dụng.',
 		linkTo: '/sports/bong-da',
+		slug: 'bong-da',
 	},
 	{
 		id: '2',
@@ -44,6 +44,7 @@ const sportsData = [
 		description:
 			'Từ giày bóng rổ đến áo đấu NBA chính hãng, nâng cao phong độ với trang bị bóng rổ đẳng cấp thế giới và các phụ kiện được thiết kế cho sân trong nhà và ngoài trời.',
 		linkTo: '/sports/bong-ro',
+		slug: 'bong-ro',
 	},
 	{
 		id: '3',
@@ -57,6 +58,7 @@ const sportsData = [
 		description:
 			'Nâng cao trình độ với bộ sưu tập vợt cầu lông cao cấp, giày chuyên dụng và phụ kiện đỉnh cao được thiết kế cho cả người mới bắt đầu và vận động viên chuyên nghiệp.',
 		linkTo: '/sports/cau-long',
+		slug: 'cau-long',
 	},
 	{
 		id: '6',
@@ -70,6 +72,7 @@ const sportsData = [
 		description:
 			'Chinh phục mọi trận đấu với dòng sản phẩm bóng chuyền chuyên nghiệp, từ giày có độ bám tối ưu đến đồng phục và bảo vệ đầu gối chất lượng cao cho cả sân trong nhà và bãi biển.',
 		linkTo: '/sports/bong-chuyen',
+		slug: 'bong-chuyen',
 	},
 	{
 		id: '5',
@@ -83,6 +86,7 @@ const sportsData = [
 		description:
 			'Trang phục bơi cao cấp với khả năng giảm lực cản nước, kính bơi công nghệ chống mờ và phụ kiện bơi lội đỉnh cao giúp cải thiện thành tích và thoải mái khi tập luyện.',
 		linkTo: '/sports/boi-loi',
+		slug: 'boi-loi',
 	},
 	{
 		id: '4',
@@ -96,6 +100,7 @@ const sportsData = [
 		description:
 			'Dụng cụ tập luyện cao cấp từ quần áo thoáng khí đến phụ kiện hỗ trợ nâng tạ, găng tay và thiết bị theo dõi hiệu suất giúp bạn đạt mục tiêu tập luyện một cách hiệu quả.',
 		linkTo: '/sports/gym',
+		slug: 'gym',
 	},
 ];
 
@@ -459,7 +464,7 @@ const HomeBanner = () => {
 											</Link>
 
 											<Link
-												to={`/product-category/${activeSport.id}`}
+												to={`/sports/${activeSport.slug}`}
 												className="inline-flex items-center justify-center bg-white/10 backdrop-blur-sm text-white font-semibold py-3.5 px-8 rounded-full hover:bg-white/20 border border-white/10 transition-all duration-300 transform hover:-translate-y-1 active:translate-y-0 text-sm"
 											>
 												<FaShoppingBag className="mr-2" />

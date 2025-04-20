@@ -53,27 +53,36 @@ const SportCategory = () => {
 	return (
 		<>
 			{/* Phần danh mục thể thao */}
-			<section className="py-12 relative overflow-hidden">
+			<section className="py-8 relative overflow-hidden">
 				<div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-					<div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-						<div className="mb-4 md:mb-0">
-							<h2 className="text-2xl font-bold text-gray-800 relative inline-block">
-								<span className="relative z-10">
-									Danh mục thể thao
-								</span>
-								<span className="absolute -bottom-1 left-0 w-full h-1 bg-blue-500 opacity-30 rounded-full z-0"></span>
-							</h2>
-							<p className="text-gray-600 mt-2 max-w-xl text-sm">
+					<div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 relative">
+						{/* Thêm decoration background */}
+						<div className="absolute -left-6 top-0 w-16 h-16 bg-blue-100 rounded-full opacity-50 blur-2xl"></div>
+						<div className="absolute right-20 bottom-0 w-12 h-12 bg-indigo-100 rounded-full opacity-40 blur-xl"></div>
+
+						<div className="mb-4 md:mb-0 relative z-10">
+							<div className="flex items-center mb-2">
+								<div className="w-1.5 h-6 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full mr-2"></div>
+								<h2 className="text-2xl font-bold text-gray-800 relative">
+									<span className="relative z-10 bg-gradient-to-r from-blue-700 to-blue-600 bg-clip-text text-transparent">
+										Danh mục thể thao
+									</span>
+									<span className="absolute -bottom-1 left-0 w-full h-1.5 bg-gradient-to-r from-blue-400 to-indigo-400 opacity-70 rounded-full z-0 transform transition-all duration-300"></span>
+								</h2>
+							</div>
+							<p className="text-sm text-gray-600 mt-2 max-w-xl pl-3.5 border-l-2 border-blue-100">
 								Khám phá các môn thể thao và tìm kiếm sản phẩm
 								phù hợp với đam mê của bạn
 							</p>
 						</div>
+
 						<Link
-							to="/categories"
-							className="group flex items-center bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium py-2 px-4 rounded-full shadow-md hover:shadow-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300"
+							to="/products"
+							className="group relative z-10 flex items-center bg-gradient-to-r from-blue-500 to-blue-600 text-white text-sm font-medium py-2.5 px-5 rounded-full shadow-md hover:shadow-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:-translate-y-0.5"
 						>
-							<span className="text-sm">Xem tất cả</span>
-							<FaArrowRight className="ml-2 text-sm group-hover:translate-x-1 transition-transform duration-300" />
+							<span>Xem tất cả</span>
+							<FaArrowRight className="ml-2 text-xs group-hover:translate-x-1.5 transition-transform duration-300" />
+							<span className="absolute inset-0 rounded-full bg-white opacity-20 group-hover:opacity-0 transition-opacity duration-300"></span>
 						</Link>
 					</div>
 

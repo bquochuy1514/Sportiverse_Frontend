@@ -70,7 +70,7 @@ export async function logoutUser(token) {
 export async function loginWithGoogle() {
 	try {
 		// Gọi API để lấy URL đăng nhập Google
-		const response = await fetch('http://localhost:8000/api/auth/google');
+		const response = await fetch('/api/auth/google');
 
 		if (!response.ok) {
 			throw new Error('Không thể kết nối với máy chủ');
@@ -112,7 +112,7 @@ export async function loginWithGoogle() {
 		// Chuyển đổi sự kiện message thành một promise để await
 		const messagePromise = new Promise((resolve) => {
 			const handleMessage = (event) => {
-				if (event.origin !== 'http://localhost:5173') return;
+				if (event.origin !== import.meta.env.VITE_FRONTEND_URL) return;
 
 				const { token, user } = event.data;
 				if (token && user) {
@@ -147,13 +147,15 @@ export async function loginWithGoogle() {
 export async function loginWithFacebook() {
 	try {
 		// Gọi API để lấy URL đăng nhập Facebook
-		const response = await fetch('http://localhost:8000/api/auth/facebook');
+		const response = await fetch('/api/auth/facebook');
 
 		if (!response.ok) {
 			throw new Error('Không thể kết nối với máy chủ');
 		}
 
 		const data = await response.json();
+
+		console.log('data', data);
 
 		if (!data.success || !data.url) {
 			throw new Error('Không thể lấy URL đăng nhập Facebook');
