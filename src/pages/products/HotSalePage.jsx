@@ -62,7 +62,7 @@ const AllProducts = () => {
 			setIsLoading(true);
 			try {
 				// Fetch products
-				const productsResponse = await fetch('/api/products');
+				const productsResponse = await fetch('/api/products-sale');
 				const productsData = await productsResponse.json();
 				setProducts(productsData.data);
 				setFilteredProducts(productsData.data);
@@ -129,7 +129,7 @@ const AllProducts = () => {
 			const queryString =
 				queryParts.length > 0 ? `?${queryParts.join('&')}` : '';
 
-			const response = await fetch(`/api/products${queryString}`);
+			const response = await fetch(`/api/products-sale${queryString}`);
 			if (!response.ok) {
 				throw new Error('Failed to fetch filtered products');
 			}
@@ -204,7 +204,7 @@ const AllProducts = () => {
 							<div className="w-1.5 h-6 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full mr-2"></div>
 							<h2 className="text-2xl font-bold text-gray-800 relative">
 								<span className="relative z-10 bg-gradient-to-r from-blue-700 to-blue-600 bg-clip-text text-transparent">
-									Tất cả sản phẩm
+									Sản phẩm được giảm giá
 								</span>
 								<span className="absolute -bottom-1 left-0 w-full h-1.5 bg-gradient-to-r from-blue-400 to-indigo-400 opacity-70 rounded-full z-0 transform transition-all duration-300"></span>
 							</h2>

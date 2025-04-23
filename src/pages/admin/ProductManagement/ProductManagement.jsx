@@ -1,4 +1,4 @@
-// ProductManagement.jsx
+// src/pages/admin/products/ProductManagement.jsx
 import React, { useEffect, useState } from 'react';
 import { FiCheck, FiLayers, FiSave, FiStar } from 'react-icons/fi';
 import {
@@ -10,8 +10,7 @@ import BasicInfoSection from './BasicInfoSection';
 import PriceStockSection from './PriceStockSection';
 import ImageUploadSection from './ImageUploadSection';
 import { toast } from 'react-toastify';
-import ProductList from './ProductList';
-import ProductDescription from './ProductDescription'; // Đảm bảo đường dẫn đúng
+import ProductDescription from './ProductDescription';
 
 const ProductManagement = () => {
 	const [selectedImages, setSelectedImages] = useState([]);
@@ -24,7 +23,6 @@ const ProductManagement = () => {
 	const [childCategories, setChildCategories] = useState([]);
 	const [selectedSportId, setSelectedSportId] = useState('');
 	const [selectedParentId, setSelectedParentId] = useState('');
-	const [products, setProducts] = useState([]);
 	const [formData, setFormData] = useState({
 		sport_id: '',
 		category_id: '',
@@ -39,29 +37,7 @@ const ProductManagement = () => {
 		additional_images: [],
 	});
 
-	// Hàm fetchProducts được định nghĩa một lần
-	const fetchProducts = async () => {
-		try {
-			const response = await fetch('/api/products', {
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem('token')}`,
-				},
-			});
-			if (response.ok) {
-				const result = await response.json();
-				if (result.status && Array.isArray(result.data)) {
-					setProducts(result.data);
-				}
-			} else {
-				throw new Error('Failed to fetch products');
-			}
-		} catch (error) {
-			console.error('Failed to load products:', error);
-			toast.error('Không thể tải danh sách sản phẩm. Vui lòng thử lại.');
-		}
-	};
-
-	// Fetch sports, parent categories, and products from API
+	// Fetch sports, parent categories
 	useEffect(() => {
 		const getSports = async () => {
 			try {
@@ -87,8 +63,7 @@ const ProductManagement = () => {
 
 		getSports();
 		getParentCategories();
-		fetchProducts(); // Gọi fetchProducts đã định nghĩa
-	}, []); // Xóa formData khỏi dependencies để tránh fetch liên tục
+	}, []);
 
 	// Filter parent categories by selected sport
 	useEffect(() => {
@@ -157,8 +132,6 @@ const ProductManagement = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-
-		console.log(formData);
 
 		// Validate required fields
 		if (!formData.name.trim()) {
@@ -238,10 +211,9 @@ const ProductManagement = () => {
 
 			if (response.ok) {
 				toast.success('Thêm sản phẩm thành công!');
-				fetchProducts(); // Gọi lại fetchProducts để lấy danh sách mới nhất
-				// Reset form
+				// Reset form sau khi thêm thành công
 				setFormData({
-					sport_id: selectedSportId || '',
+					sport_id: '',
 					category_id: '',
 					name: '',
 					description: '',
@@ -288,12 +260,6 @@ const ProductManagement = () => {
 					<h1 className="text-2xl font-bold text-gray-900">
 						Thêm Sản Phẩm Mới
 					</h1>
-					<button
-						type="submit"
-						className="bg-indigo-600 text-white px-4 py-2 rounded-lg shadow hover:bg-indigo-700 transition-colors flex items-center"
-					>
-						<FiSave className="mr-2" /> Lưu Bản Nháp
-					</button>
 				</div>
 
 				<div className="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -438,8 +404,6 @@ const ProductManagement = () => {
 					</p>
 				</div>
 			</form>
-
-			<ProductList products={products} onProductDeleted={fetchProducts} />
 		</div>
 	);
 };

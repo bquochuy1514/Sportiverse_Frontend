@@ -23,7 +23,6 @@ const ProductsBySport = () => {
 					`/api/products-categories/${slug}`
 				);
 				const data = await response.json();
-				console.log(data.products.data[0].sport);
 				if (data.success) {
 					setProducts(data.products.data || []);
 					setSport(data.products.data[0].sport || null);
@@ -135,6 +134,8 @@ const ProductsBySport = () => {
 			</section>
 		);
 	}
+
+	console.log('sport: ', sport);
 
 	return (
 		<section className="py-12 relative overflow-hidden">

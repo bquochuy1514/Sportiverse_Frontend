@@ -5,9 +5,23 @@ import {
 	FiTag,
 	FiPackage,
 	FiDollarSign,
+	FiEdit,
 } from 'react-icons/fi';
 
-const ProductTable = ({ products, onViewProduct, onConfirmDelete }) => {
+// Hàm cắt chữ nếu quá dài
+const truncateText = (text, maxLength = 50) => {
+	if (!text) return '';
+	return text.length > maxLength
+		? text.substring(0, maxLength) + '...'
+		: text;
+};
+
+const ProductTable = ({
+	products,
+	onViewProduct,
+	onConfirmDelete,
+	onEditProduct,
+}) => {
 	return (
 		<div className="bg-white rounded-xl shadow-lg overflow-hidden">
 			<div className="overflow-x-auto">
@@ -61,10 +75,10 @@ const ProductTable = ({ products, onViewProduct, onConfirmDelete }) => {
 								</td>
 								<td className="px-6 py-4 whitespace-nowrap">
 									<div className="text-sm font-medium text-gray-900 max-w-xs hover:text-indigo-600 transition-colors truncate overflow-hidden">
-										{product.name}
+										{truncateText(product.name, 30)}
 									</div>
 									<div className="text-xs text-gray-500 mt-1 truncate max-w-xs overflow-hidden">
-										{product.description}
+										{truncateText(product.description, 30)}
 									</div>
 								</td>
 								<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -149,6 +163,16 @@ const ProductTable = ({ products, onViewProduct, onConfirmDelete }) => {
 											}
 										>
 											<FiEye className="h-5 w-5" />
+										</button>
+										{/* Edit Product */}
+										<button
+											onClick={() =>
+												onEditProduct(product.id)
+											}
+											className="text-green-500 hover:text-green-700 transition-colors duration-200"
+											title="Chỉnh sửa"
+										>
+											<FiEdit className="h-5 w-5" />
 										</button>
 										<button
 											className="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-100 transition-colors"

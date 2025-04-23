@@ -10,14 +10,17 @@ import { Link } from 'react-router-dom';
 import ProductManagement from './ProductManagement/ProductManagement.jsx';
 import CategoryManagement from './CategoryManagement';
 import OrderManagement from './OrderManagement';
+import ProductListPage from './ProductManagement/ProductListPage.jsx';
 
 const AdminPage = () => {
-	const [activeSection, setActiveSection] = useState('products');
+	const [activeSection, setActiveSection] = useState('product/add');
 
 	const renderContent = () => {
 		switch (activeSection) {
-			case 'products':
+			case 'product/add':
 				return <ProductManagement />;
+			case 'products':
+				return <ProductListPage />;
 			case 'categories':
 				return <CategoryManagement />;
 			case 'orders':
@@ -44,6 +47,19 @@ const AdminPage = () => {
 					<div className="px-4 py-2 text-indigo-300 text-xs font-semibold">
 						QUẢN LÝ CHÍNH
 					</div>
+					<button
+						onClick={() => setActiveSection('product/add')}
+						className={`flex items-center py-3 px-6 w-full text-left text-indigo-100 hover:bg-indigo-800 transition-colors ${
+							activeSection === 'product/add'
+								? 'bg-indigo-800'
+								: ''
+						}`}
+					>
+						<span className="mr-3">
+							<FiPackage />
+						</span>
+						<span>Thêm sản phẩm</span>
+					</button>
 					<button
 						onClick={() => setActiveSection('products')}
 						className={`flex items-center py-3 px-6 w-full text-left text-indigo-100 hover:bg-indigo-800 transition-colors ${

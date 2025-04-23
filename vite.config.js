@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
 				},
 			},
 			allowedHosts: [
-				'ruling-tragedy-hydrocodone-introduce.trycloudflare.com',
+				'leasing-commentary-spectacular-subsection.trycloudflare.com',
 				'localhost',
 			],
 		},

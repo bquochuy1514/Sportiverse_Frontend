@@ -18,6 +18,9 @@ import ProductDetail from './components/home/products/product-detail/ProductDeta
 import ScrollToTop from './components/ScrollToTop';
 import ProductsBySport from './components/home/sports/ProductsBySport';
 import AllProducts from './pages/products/AllProducts';
+import EditProductPage from './pages/admin/ProductManagement/EditProductPage';
+import CartPage from './components/cart/CartPage';
+import HotSalePage from './pages/products/HotSalePage';
 
 // Placeholder component cho các trang chưa tạo
 const Placeholder = ({ pageName }) => (
@@ -46,6 +49,14 @@ function App() {
 						element={
 							<ProtectedAdminRoute>
 								<ProductDetailManagement />
+							</ProtectedAdminRoute>
+						}
+					/>
+					<Route
+						path="admin/product/edit/:productId"
+						element={
+							<ProtectedAdminRoute>
+								<EditProductPage />
 							</ProtectedAdminRoute>
 						}
 					/>
@@ -84,7 +95,16 @@ function App() {
 					<Route path="/auth/callback" element={<AuthCallback />} />
 					<Route path="/" element={<MainLayout />}>
 						<Route index element={<HomePage />} />
+						<Route
+							path="cart"
+							element={
+								<ProtectedRoute>
+									<CartPage />
+								</ProtectedRoute>
+							}
+						/>
 						<Route path="products" element={<AllProducts />} />
+						<Route path="hot-sale" element={<HotSalePage />} />
 						<Route
 							path="product/:slug"
 							element={<ProductDetail />}

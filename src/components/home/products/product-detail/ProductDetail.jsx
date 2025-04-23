@@ -1,3 +1,4 @@
+// src/components/products/ProductDetail.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ProductDescription from '../../../../pages/admin/ProductManagement/ProductDescription';
@@ -13,13 +14,14 @@ import {
 	FaShareAlt,
 	FaStar,
 	FaRegStar,
-	FaChevronLeft,
-	FaChevronRight,
 } from 'react-icons/fa';
 import { MdLocalOffer, MdSecurity } from 'react-icons/md';
 import { TbTruckReturn } from 'react-icons/tb';
 import { RiShieldCheckLine } from 'react-icons/ri';
 import ProductImageGallery from './ProductImageGallery';
+import RelatedProductsSection from '../../../common/products/RelatedProductsSection';
+import cartService from '../../../../services/CartService';
+import { toast } from 'react-toastify';
 
 const ProductDetail = () => {
 	const { slug } = useParams();
@@ -51,6 +53,25 @@ const ProductDetail = () => {
 
 		fetchProduct();
 	}, [slug]);
+
+	const handleAddToCart = async (quantity) => {
+		try {
+			// Gọi service để thêm sản phẩm vào giỏ hàng
+			// eslint-disable-next-line no-unused-vars
+			const response = await cartService.addToCart(product.id, quantity);
+			// Hiển thị thông báo thành công
+			toast.success('Đã thêm sản phẩm vào giỏ hàng!');
+
+			// Nếu bạn cần cập nhật UI hoặc state khác sau khi thêm vào giỏ hàng
+			// Ví dụ: cập nhật số lượng sản phẩm hiển thị trên icon giỏ hàng
+			// Có thể dispatch một action hoặc cập nhật state ở đây
+		} catch (error) {
+			// Hiển thị thông báo lỗi
+			toast.error(
+				error.message || 'Không thể thêm sản phẩm vào giỏ hàng'
+			);
+		}
+	};
 
 	const formatPrice = (price) => {
 		return new Intl.NumberFormat('vi-VN', {
@@ -157,9 +178,9 @@ const ProductDetail = () => {
 						whileHover={{ x: -4 }}
 						className="mr-2"
 					>
-						<FaArrowLeft className="h-5 w-5" />
+						<FaArrowLeft className="h-4 w-4" />
 					</motion.span>
-					<span className="font-medium text-xl">Quay lại</span>
+					<span className="font-medium text-lg">Quay lại</span>
 				</motion.button>
 
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -380,6 +401,9 @@ const ProductDetail = () => {
 											boxShadow:
 												'0 10px 25px -5px rgba(59, 130, 246, 0.5)',
 										}}
+										onClick={() =>
+											handleAddToCart(quantity)
+										}
 										whileTap={{ scale: 0.98 }}
 										className="col-span-2 py-2.5 px-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg font-medium flex items-center justify-center shadow-md"
 									>
@@ -433,6 +457,19 @@ const ProductDetail = () => {
 						<ProductDescription description={product.description} />
 					</div>
 				</motion.div>
+
+				{/* Thêm section sản phẩm liên quan */}
+				{product && (
+					<>
+						{/* Sản phẩm liên quan */}
+						<RelatedProductsSection
+							currentProductId={product.id}
+							categoryId={product.category?.id}
+							sportId={product.sport?.id}
+							sectionTitle="Sản phẩm liên quan"
+						/>
+					</>
+				)}
 			</div>
 		</motion.section>
 	);
