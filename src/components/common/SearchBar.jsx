@@ -1,15 +1,17 @@
 // src/components/common/SearchBar.jsx
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const SearchBar = ({ className = '', placeholder = 'Tìm kiếm...' }) => {
 	const [searchQuery, setSearchQuery] = useState('');
+	const navigate = useNavigate();
 
 	// Hàm xử lý khi submit form tìm kiếm
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		// Thêm logic tìm kiếm ở đây, ví dụ: navigate đến trang kết quả tìm kiếm
 		console.log('Searching for:', searchQuery);
-		// navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+		navigate(`/products?search=${encodeURIComponent(searchQuery)}`);
 	};
 
 	return (

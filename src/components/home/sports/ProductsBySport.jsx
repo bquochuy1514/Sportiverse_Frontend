@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { FaShoppingCart, FaHeart, FaArrowRight, FaStar } from 'react-icons/fa';
 import { BiCheckCircle } from 'react-icons/bi';
 import { TbTruckDelivery } from 'react-icons/tb';
+import ReactPaginate from 'react-paginate';
 
 const ProductsBySport = () => {
 	const { slug } = useParams();
@@ -23,9 +24,10 @@ const ProductsBySport = () => {
 					`/api/products-categories/${slug}`
 				);
 				const data = await response.json();
+				console.log(data);
 				if (data.success) {
-					setProducts(data.products.data || []);
-					setSport(data.products.data[0].sport || null);
+					setProducts(data.products || []);
+					setSport(data.products[0].sport || null);
 				} else {
 					setError(data.message || 'Không thể tải sản phẩm');
 				}
@@ -135,8 +137,6 @@ const ProductsBySport = () => {
 		);
 	}
 
-	console.log('sport: ', sport);
-
 	return (
 		<section className="py-12 relative overflow-hidden">
 			<div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -188,6 +188,7 @@ const ProductsBySport = () => {
 							transition={{ duration: 0.4, delay: index * 0.05 }}
 							className="transform transition-all duration-300 hover:-translate-y-1"
 						>
+							{console.log(products)}
 							<div
 								className={`bg-white rounded-lg shadow-sm hover:shadow overflow-hidden group h-full flex flex-col ${
 									product.stock_quantity <= 0

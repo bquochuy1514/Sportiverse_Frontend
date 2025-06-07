@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
 				},
 			},
 			allowedHosts: [
-				'leasing-commentary-spectacular-subsection.trycloudflare.com',
+				'join-ambient-foul-cw.trycloudflare.com',
 				'localhost',
 			],
 		},

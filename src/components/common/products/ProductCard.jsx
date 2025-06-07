@@ -95,11 +95,11 @@ const ProductCard = ({ product, index = 0 }) => {
 				<div className="p-3 flex-grow flex flex-col">
 					{/* Category with better style */}
 					<div className="flex justify-between items-start">
-						<Link to={`/category/${product.category.slug}`}>
+						<div>
 							<span className="text-xs text-blue-600 font-medium bg-blue-50 px-1.5 py-0.5 rounded-sm hover:bg-blue-100 transition-colors">
 								{`${product.sport.name} - ${product.category.name}`}
 							</span>
-						</Link>
+						</div>
 					</div>
 
 					{/* Title */}

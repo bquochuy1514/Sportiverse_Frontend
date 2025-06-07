@@ -116,7 +116,7 @@ const Footer = () => {
 						<ul className="space-y-2">
 							<li>
 								<Link
-									to="/products/category/football"
+									to="/sports/bong-da"
 									className="text-gray-600 hover:text-blue-600 transition-colors"
 								>
 									Bóng đá
@@ -124,7 +124,7 @@ const Footer = () => {
 							</li>
 							<li>
 								<Link
-									to="/products/category/basketball"
+									to="/sports/bong-ro"
 									className="text-gray-600 hover:text-blue-600 transition-colors"
 								>
 									Bóng rổ
@@ -132,15 +132,15 @@ const Footer = () => {
 							</li>
 							<li>
 								<Link
-									to="/products/category/tennis"
+									to="/sports/cau-long"
 									className="text-gray-600 hover:text-blue-600 transition-colors"
 								>
-									Tennis
+									Cầu lông
 								</Link>
 							</li>
 							<li>
 								<Link
-									to="/products/category/swimming"
+									to="/sports/boi-loi"
 									className="text-gray-600 hover:text-blue-600 transition-colors"
 								>
 									Bơi lội

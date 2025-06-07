@@ -21,6 +21,8 @@ import AllProducts from './pages/products/AllProducts';
 import EditProductPage from './pages/admin/ProductManagement/EditProductPage';
 import CartPage from './components/cart/CartPage';
 import HotSalePage from './pages/products/HotSalePage';
+import ResetPassword from './pages/forgot-password/ResetPassword';
+import ForgotPassword from './pages/forgot-password/ForgotPassword';
 
 // Placeholder component cho các trang chưa tạo
 const Placeholder = ({ pageName }) => (
@@ -93,6 +95,11 @@ function App() {
 						}
 					/>
 					<Route path="/auth/callback" element={<AuthCallback />} />
+					<Route
+						path="forgot-password"
+						element={<ForgotPassword />}
+					/>
+					<Route path="reset-password" element={<ResetPassword />} />"
 					<Route path="/" element={<MainLayout />}>
 						<Route index element={<HomePage />} />
 						<Route
