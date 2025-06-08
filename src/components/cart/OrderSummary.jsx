@@ -1,11 +1,9 @@
-// src/components/Cart/OrderSummary.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const OrderSummary = ({ cartItems }) => {
 	const navigate = useNavigate();
-	const [voucherCode, setVoucherCode] = useState('');
 	const [summaryData, setSummaryData] = useState({
 		originalTotal: 0,
 		finalTotal: 0,
@@ -14,13 +12,13 @@ const OrderSummary = ({ cartItems }) => {
 
 	// Cập nhật giá khi cartItems thay đổi
 	useEffect(() => {
-		// Tính tổng giá gốc từ giá niêm yết (price)
+		// Tính tổng giá gốc
 		const originalTotal = cartItems.reduce(
 			(total, item) => total + item.price * item.quantity,
 			0
 		);
 
-		// Tính tổng giá sau khi giảm (dùng sale_price nếu có, nếu không thì dùng price)
+		// Tính tổng giá sau khi giảm giá sản phẩm
 		const finalTotal = cartItems.reduce((total, item) => {
 			const itemPrice =
 				item.product.sale_price > 0
@@ -37,7 +35,7 @@ const OrderSummary = ({ cartItems }) => {
 			finalTotal,
 			productDiscount,
 		});
-	}, [cartItems]); // Chạy lại khi cartItems thay đổi
+	}, [cartItems]);
 
 	// Format tiền tệ VND
 	const formatPrice = (price) => {
@@ -47,7 +45,7 @@ const OrderSummary = ({ cartItems }) => {
 		}).format(price);
 	};
 
-	const shippingFee = 0; // Phí vận chuyển (có thể tính sau)
+	const shippingFee = 0; // Phí vận chuyển
 	const total = summaryData.finalTotal + shippingFee;
 
 	const handleContinueShopping = () => {
@@ -58,19 +56,8 @@ const OrderSummary = ({ cartItems }) => {
 		navigate('/checkout');
 	};
 
-	const handleApplyVoucher = () => {
-		if (!voucherCode.trim()) {
-			toast.error('Vui lòng nhập mã voucher');
-			return;
-		}
-
-		// Mô phỏng áp dụng voucher
-		toast.info(`Đang áp dụng mã voucher: ${voucherCode}`);
-		// Ở đây bạn sẽ gọi API để áp dụng voucher
-	};
-
 	const handleCopyVoucher = () => {
-		navigator.clipboard.writeText('DECAUV11');
+		navigator.clipboard.writeText('SUMMER2025');
 		toast.success('Đã sao chép mã giảm giá');
 	};
 
@@ -154,73 +141,40 @@ const OrderSummary = ({ cartItems }) => {
 					</div>
 					<div>
 						<h3 className="font-bold text-gray-800">
-							CHẮNG LO UV, THỂ THAO HẾT Ý 16.4 - 22.4
+							CHẮNG LO UV, THỂ THAO HẾT Ý
 						</h3>
 						<p className="text-sm mt-1">
 							Nhập mã{' '}
 							<span className="font-semibold text-blue-600">
-								DECAUV11
+								SUMMER2025
 							</span>{' '}
-							giảm ngay 11% (tối đa 300K) + freeship đơn hàng từ
-							1.2 triệu!
+							giảm ngay 20% + freeship đơn hàng từ 100K!
 						</p>
 					</div>
 				</div>
 				<button
 					onClick={handleCopyVoucher}
-					className="bg-blue-600 text-white text-sm uppercase py-1 px-4 rounded hover:bg-blue-700 transition-colors w-auto"
+					className="bg-blue-600 text-white text-sm uppercase py-1 px-3 rounded hover:bg-blue-700 transition-colors"
 				>
-					SAO CHÉP MÃ
+					SAO CHÉP
 				</button>
-			</div>
-
-			{/* Phần nhập mã voucher */}
-			<div className="mt-6">
-				<h3 className="font-medium mb-3">Nhập mã voucher của bạn</h3>
-				<div className="flex space-x-2 mb-3">
-					<input
-						type="text"
-						value={voucherCode}
-						onChange={(e) => setVoucherCode(e.target.value)}
-						placeholder="Nhập mã voucher"
-						className="flex-1 border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-					/>
-					<button
-						onClick={handleApplyVoucher}
-						className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors whitespace-nowrap"
-					>
-						Áp dụng
-					</button>
-				</div>
 			</div>
 
 			{/* Các nút hành động */}
 			<div className="mt-6 space-y-3">
 				<button
 					onClick={handleCheckout}
-					className="w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700 transition-colors font-medium"
+					className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors font-medium"
 				>
-					TIẾP TỤC
+					THANH TOÁN
 				</button>
 				<button
 					onClick={handleContinueShopping}
-					className="w-full border border-gray-300 text-gray-700 py-3 rounded hover:bg-gray-50 transition-colors font-medium"
+					className="w-full border border-gray-300 text-gray-700 py-2 rounded hover:bg-gray-50 transition-colors font-medium"
 				>
-					CHỌN THÊM SẢN PHẨM
+					MUA THÊM
 				</button>
 			</div>
-
-			{/* Thêm phần CSS để ẩn spinner cho input number */}
-			<style jsx>{`
-				input[type='number']::-webkit-outer-spin-button,
-				input[type='number']::-webkit-inner-spin-button {
-					-webkit-appearance: none;
-					margin: 0;
-				}
-				input[type='number'] {
-					-moz-appearance: textfield;
-				}
-			`}</style>
 		</div>
 	);
 };

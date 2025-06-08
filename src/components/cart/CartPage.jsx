@@ -23,7 +23,7 @@ const CartPage = () => {
 				},
 			});
 			const data = await response.json();
-			console.log('cart items:', data.data.items);
+			// console.log('cart items:', data.data.items);
 			if (data.success) {
 				setCartItems(data.data.items || []);
 			} else {

@@ -14,7 +14,7 @@ const FeaturedProducts = () => {
 		const fetchFeaturedProducts = async () => {
 			setIsLoading(true);
 			try {
-				const response = await fetch('/api/featured-products?limit=15');
+				const response = await fetch('/api/featured-products?limit=25');
 				const data = await response.json();
 				setProducts(data.data);
 			} catch (error) {

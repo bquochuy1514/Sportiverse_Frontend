@@ -49,10 +49,6 @@ const ResetPassword = () => {
 
 			console.log(data);
 
-			if (!response.ok) {
-				throw new Error(data.message || 'Đã có lỗi xảy ra.');
-			}
-
 			setMessage(data.message);
 			setTimeout(() => navigate('/login'), 2000);
 		} catch (error) {
