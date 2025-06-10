@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import {
-	FiPackage,
-	FiList,
-	FiDollarSign,
+	FiPlusSquare, // For "Add Product"
+	FiPackage, // For "Product Management"
+	FiShoppingCart, // For "Orders"
+	FiPercent, // For "Coupon Management"
+	FiUsers, // For "User Management"
 	FiMenu,
 	FiBell,
 } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import ProductManagement from './ProductManagement/ProductManagement.jsx';
-import CategoryManagement from './CategoryManagement';
 import OrderManagement from './OrderManagement';
 import ProductListPage from './ProductManagement/ProductListPage.jsx';
+import CouponManagement from './CouponManagement.jsx';
+import UserManagement from './UserManagement.jsx';
 
 const AdminPage = () => {
 	const [activeSection, setActiveSection] = useState('product/add');
@@ -21,10 +24,12 @@ const AdminPage = () => {
 				return <ProductManagement />;
 			case 'products':
 				return <ProductListPage />;
-			case 'categories':
-				return <CategoryManagement />;
 			case 'orders':
 				return <OrderManagement />;
+			case 'coupons':
+				return <CouponManagement />;
+			case 'users':
+				return <UserManagement />;
 			default:
 				return <ProductManagement />;
 		}
@@ -56,7 +61,7 @@ const AdminPage = () => {
 						}`}
 					>
 						<span className="mr-3">
-							<FiPackage />
+							<FiPlusSquare />
 						</span>
 						<span>Thêm sản phẩm</span>
 					</button>
@@ -72,28 +77,37 @@ const AdminPage = () => {
 						<span>Quản Lý Sản Phẩm</span>
 					</button>
 					<button
-						onClick={() => setActiveSection('categories')}
-						className={`flex items-center py-3 px-6 w-full text-left text-indigo-100 hover:bg-indigo-800 transition-colors ${
-							activeSection === 'categories'
-								? 'bg-indigo-800'
-								: ''
-						}`}
-					>
-						<span className="mr-3">
-							<FiList />
-						</span>
-						<span>Danh Mục</span>
-					</button>
-					<button
 						onClick={() => setActiveSection('orders')}
 						className={`flex items-center py-3 px-6 w-full text-left text-indigo-100 hover:bg-indigo-800 transition-colors ${
 							activeSection === 'orders' ? 'bg-indigo-800' : ''
 						}`}
 					>
 						<span className="mr-3">
-							<FiDollarSign />
+							<FiShoppingCart />
 						</span>
 						<span>Đơn Hàng</span>
+					</button>
+					<button
+						onClick={() => setActiveSection('coupons')}
+						className={`flex items-center py-3 px-6 w-full text-left text-indigo-100 hover:bg-indigo-800 transition-colors ${
+							activeSection === 'coupons' ? 'bg-indigo-800' : ''
+						}`}
+					>
+						<span className="mr-3">
+							<FiPercent />
+						</span>
+						<span>Quản Lý Mã Giảm Giá</span>
+					</button>
+					<button
+						onClick={() => setActiveSection('users')}
+						className={`flex items-center py-3 px-6 w-full text-left text-indigo-100 hover:bg-indigo-800 transition-colors ${
+							activeSection === 'users' ? 'bg-indigo-800' : ''
+						}`}
+					>
+						<span className="mr-3">
+							<FiUsers />
+						</span>
+						<span>Quản Lý Người Dùng</span>
 					</button>
 				</nav>
 
@@ -126,12 +140,16 @@ const AdminPage = () => {
 								<FiMenu className="h-6 w-6" />
 							</button>
 							<h2 className="text-xl font-bold text-gray-800">
+								{activeSection === 'product/add' &&
+									'Thêm Sản Phẩm'}
 								{activeSection === 'products' &&
 									'Quản Lý Sản Phẩm'}
-								{activeSection === 'categories' &&
-									'Quản Lý Danh Mục'}
 								{activeSection === 'orders' &&
 									'Quản Lý Đơn Hàng'}
+								{activeSection === 'coupons' &&
+									'Quản Lý Mã Giảm Giá'}
+								{activeSection === 'users' &&
+									'Quản Lý Người Dùng'}
 							</h2>
 						</div>
 

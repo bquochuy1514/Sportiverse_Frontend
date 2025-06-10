@@ -20,8 +20,8 @@ import { TbTruckReturn } from 'react-icons/tb';
 import { RiShieldCheckLine } from 'react-icons/ri';
 import ProductImageGallery from './ProductImageGallery';
 import RelatedProductsSection from '../../../common/products/RelatedProductsSection';
-import cartService from '../../../../services/CartService';
 import { toast } from 'react-toastify';
+import { useCart } from '../../../../contexts/CartContext';
 
 const ProductDetail = () => {
 	const { slug } = useParams();
@@ -31,6 +31,7 @@ const ProductDetail = () => {
 	const [error, setError] = useState(null);
 	const [quantity, setQuantity] = useState(1);
 	const [isWishlist, setIsWishlist] = useState(false);
+	const { addToCart } = useCart();
 
 	useEffect(() => {
 		const fetchProduct = async () => {
@@ -56,15 +57,8 @@ const ProductDetail = () => {
 
 	const handleAddToCart = async (quantity) => {
 		try {
-			// Gọi service để thêm sản phẩm vào giỏ hàng
-			// eslint-disable-next-line no-unused-vars
-			const response = await cartService.addToCart(product.id, quantity);
-			// Hiển thị thông báo thành công
+			await addToCart(product.id, quantity);
 			toast.success('Đã thêm sản phẩm vào giỏ hàng!');
-
-			// Nếu bạn cần cập nhật UI hoặc state khác sau khi thêm vào giỏ hàng
-			// Ví dụ: cập nhật số lượng sản phẩm hiển thị trên icon giỏ hàng
-			// Có thể dispatch một action hoặc cập nhật state ở đây
 		} catch (error) {
 			// Hiển thị thông báo lỗi
 			toast.error(

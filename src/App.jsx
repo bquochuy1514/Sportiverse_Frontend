@@ -25,6 +25,8 @@ import ResetPassword from './pages/forgot-password/ResetPassword';
 import ForgotPassword from './pages/forgot-password/ForgotPassword';
 import CheckOutPage from './pages/checkout/CheckOutPage';
 import OrdersPage from './pages/order/OrdersPage';
+import OrderSuccessPage from './pages/checkout/OrderSuccessPage';
+import { CartProvider } from './contexts/CartContext';
 
 // Placeholder component cho các trang chưa tạo
 const Placeholder = ({ pageName }) => (
@@ -37,127 +39,140 @@ const Placeholder = ({ pageName }) => (
 function App() {
 	return (
 		<AuthProvider>
-			<BrowserRouter>
-				<ScrollToTop />
-				<Routes>
-					<Route
-						path="admin"
-						element={
-							<ProtectedAdminRoute>
-								<AdminPage />
-							</ProtectedAdminRoute>
-						}
-					/>
-					<Route
-						path="admin/product/:productId"
-						element={
-							<ProtectedAdminRoute>
-								<ProductDetailManagement />
-							</ProtectedAdminRoute>
-						}
-					/>
-					<Route
-						path="admin/product/edit/:productId"
-						element={
-							<ProtectedAdminRoute>
-								<EditProductPage />
-							</ProtectedAdminRoute>
-						}
-					/>
-					<Route
-						path="login"
-						element={
-							<ProtectedRoute redirectIfAuthenticated={true}>
-								<LoginPage />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="register"
-						element={
-							<ProtectedRoute redirectIfAuthenticated={true}>
-								<RegisterPage />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="account"
-						element={
-							<ProtectedRoute>
-								<AccountPage />
-							</ProtectedRoute>
-						}
-					/>
-					<Route
-						path="change-password"
-						element={
-							<ProtectedRoute>
-								<ChangePassowrd />
-							</ProtectedRoute>
-						}
-					/>
-					<Route path="/auth/callback" element={<AuthCallback />} />
-					<Route
-						path="forgot-password"
-						element={<ForgotPassword />}
-					/>
-					<Route path="reset-password" element={<ResetPassword />} />"
-					<Route path="/" element={<MainLayout />}>
+			<CartProvider>
+				<BrowserRouter>
+					<ScrollToTop />
+					<Routes>
 						<Route
-							path="orders"
+							path="admin"
 							element={
-								<ProtectedRoute>
-									<OrdersPage />
-								</ProtectedRoute>
+								<ProtectedAdminRoute>
+									<AdminPage />
+								</ProtectedAdminRoute>
 							}
 						/>
-						<Route index element={<HomePage />} />
 						<Route
-							path="/checkout"
+							path="admin/product/:productId"
 							element={
-								<ProtectedRoute>
-									<CheckOutPage />
+								<ProtectedAdminRoute>
+									<ProductDetailManagement />
+								</ProtectedAdminRoute>
+							}
+						/>
+						<Route
+							path="admin/product/edit/:productId"
+							element={
+								<ProtectedAdminRoute>
+									<EditProductPage />
+								</ProtectedAdminRoute>
+							}
+						/>
+						<Route
+							path="login"
+							element={
+								<ProtectedRoute redirectIfAuthenticated={true}>
+									<LoginPage />
 								</ProtectedRoute>
 							}
 						/>
 						<Route
-							path="cart"
+							path="register"
 							element={
-								<ProtectedRoute>
-									<CartPage />
+								<ProtectedRoute redirectIfAuthenticated={true}>
+									<RegisterPage />
 								</ProtectedRoute>
 							}
 						/>
-						<Route path="products" element={<AllProducts />} />
-						<Route path="hot-sale" element={<HotSalePage />} />
 						<Route
-							path="product/:slug"
-							element={<ProductDetail />}
-						/>
-						<Route
-							path="sports/:slug"
-							element={<ProductsBySport />}
-						/>
-						<Route
-							path="*"
+							path="account"
 							element={
-								<Placeholder pageName="404 - Không tìm thấy trang" />
+								<ProtectedRoute>
+									<AccountPage />
+								</ProtectedRoute>
 							}
 						/>
-					</Route>
-				</Routes>
-				<ToastContainer
-					position="top-right"
-					autoClose={5000}
-					hideProgressBar={false}
-					newestOnTop={false}
-					closeOnClick
-					rtl={false}
-					pauseOnFocusLoss
-					draggable
-					pauseOnHover
-				/>
-			</BrowserRouter>
+						<Route
+							path="change-password"
+							element={
+								<ProtectedRoute>
+									<ChangePassowrd />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path="/auth/callback"
+							element={<AuthCallback />}
+						/>
+						<Route
+							path="forgot-password"
+							element={<ForgotPassword />}
+						/>
+						<Route
+							path="reset-password"
+							element={<ResetPassword />}
+						/>
+						"
+						<Route path="/" element={<MainLayout />}>
+							<Route
+								path="orders"
+								element={
+									<ProtectedRoute>
+										<OrdersPage />
+									</ProtectedRoute>
+								}
+							/>
+							<Route
+								path="order-success"
+								element={<OrderSuccessPage />}
+							/>
+							<Route index element={<HomePage />} />
+							<Route
+								path="/checkout"
+								element={
+									<ProtectedRoute>
+										<CheckOutPage />
+									</ProtectedRoute>
+								}
+							/>
+							<Route
+								path="cart"
+								element={
+									<ProtectedRoute>
+										<CartPage />
+									</ProtectedRoute>
+								}
+							/>
+							<Route path="products" element={<AllProducts />} />
+							<Route path="hot-sale" element={<HotSalePage />} />
+							<Route
+								path="product/:slug"
+								element={<ProductDetail />}
+							/>
+							<Route
+								path="sports/:slug"
+								element={<ProductsBySport />}
+							/>
+							<Route
+								path="*"
+								element={
+									<Placeholder pageName="404 - Không tìm thấy trang" />
+								}
+							/>
+						</Route>
+					</Routes>
+					<ToastContainer
+						position="top-right"
+						autoClose={1500}
+						hideProgressBar={false}
+						newestOnTop={false}
+						closeOnClick
+						rtl={false}
+						pauseOnFocusLoss
+						draggable
+						pauseOnHover
+					/>
+				</BrowserRouter>
+			</CartProvider>
 		</AuthProvider>
 	);
 }

@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
 				},
 			},
 			allowedHosts: [
-				'join-ambient-foul-cw.trycloudflare.com',
+				'intl-medicaid-struct-conversations.trycloudflare.com',
 				'localhost',
 			],
 		},

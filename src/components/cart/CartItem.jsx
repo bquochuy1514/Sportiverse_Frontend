@@ -4,11 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { FaTrash, FaMinus, FaPlus } from 'react-icons/fa';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
-import cartService from '../../services/CartService';
 import { toast } from 'react-toastify';
+import { useCart } from '../../contexts/CartContext';
 
 const CartItem = ({ item, onDelete, onQuantityChange }) => {
 	const navigate = useNavigate();
+	const { updateCartItem, removeFromCart } = useCart();
 	const [quantity, setQuantity] = useState(item.quantity);
 	const [isUpdating, setIsUpdating] = useState(false);
 	const [isHovered, setIsHovered] = useState(false);
@@ -20,7 +21,6 @@ const CartItem = ({ item, onDelete, onQuantityChange }) => {
 		}).format(price);
 	};
 
-	// Tính % giảm giá
 	const calculateDiscountPercentage = (original, sale) => {
 		if (!original || !sale || original <= 0) return 0;
 		return Math.round(((original - sale) / original) * 100);
@@ -28,46 +28,38 @@ const CartItem = ({ item, onDelete, onQuantityChange }) => {
 
 	const handleQuantityChange = async (newQuantity) => {
 		if (newQuantity < 1 || isUpdating) return;
+
+		const oldQuantity = quantity;
 		setIsUpdating(true);
 
 		// Cập nhật UI trước để giao diện phản hồi nhanh
 		setQuantity(newQuantity);
-		// Thông báo cho component cha biết số lượng đã thay đổi
+
+		// Thông báo cho component cha biết số lượng đã thay đổi (để cập nhật tổng tiền)
 		if (onQuantityChange) {
-			onQuantityChange(newQuantity);
+			onQuantityChange(item.id, newQuantity, oldQuantity);
 		}
 
 		try {
-			const data = await cartService.updateCartItemQuantity(
-				item.id,
-				newQuantity
-			);
-			if (data.success) {
-				toast.success('Số lượng đã được cập nhật', {
-					position: 'bottom-right',
-					autoClose: 2000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-				});
-			} else {
-				// Nếu API lỗi, khôi phục lại số lượng ban đầu
-				setQuantity(item.quantity);
-				if (onQuantityChange) {
-					onQuantityChange(item.quantity);
-				}
-				toast.error(data.message);
-				throw new Error(data.message || 'Không thể cập nhật số lượng');
-			}
-		} catch (err) {
+			// Sử dụng CartContext để cập nhật - sẽ tự động cập nhật cartItemsCount
+			await updateCartItem(item.id, newQuantity);
+
+			toast.success('Số lượng đã được cập nhật', {
+				position: 'bottom-right',
+				autoClose: 2000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+			});
+		} catch (error) {
 			// Nếu có lỗi, khôi phục lại số lượng ban đầu
-			setQuantity(item.quantity);
+			setQuantity(oldQuantity);
 			if (onQuantityChange) {
-				onQuantityChange(item.quantity);
+				onQuantityChange(item.id, oldQuantity, newQuantity);
 			}
-			toast.error(err.message || 'Đã xảy ra lỗi khi cập nhật số lượng');
-			console.error('Error updating quantity:', err);
+			toast.error(error.message || 'Đã xảy ra lỗi khi cập nhật số lượng');
+			console.error('Error updating quantity:', error);
 		} finally {
 			setIsUpdating(false);
 		}
@@ -77,20 +69,37 @@ const CartItem = ({ item, onDelete, onQuantityChange }) => {
 		const value = e.target.value;
 		if (value === '' || isNaN(value)) return;
 		const newQuantity = parseInt(value);
-		handleQuantityChange(newQuantity);
+		if (newQuantity > 0 && newQuantity <= item.product.stock_quantity) {
+			handleQuantityChange(newQuantity);
+		}
 	};
 
 	const handleIncrease = () => {
-		handleQuantityChange(quantity + 1);
+		if (quantity < item.product.stock_quantity) {
+			handleQuantityChange(quantity + 1);
+		}
 	};
 
 	const handleDecrease = () => {
-		handleQuantityChange(quantity - 1);
+		if (quantity > 1) {
+			handleQuantityChange(quantity - 1);
+		}
 	};
 
-	const handleDelete = () => {
-		// Animation trước khi xóa
-		onDelete(item.product.id);
+	const handleDelete = async () => {
+		try {
+			// Sử dụng CartContext để xóa - sẽ tự động cập nhật cartItemsCount
+			await removeFromCart(item.id);
+
+			// Thông báo cho component cha
+			if (onDelete) {
+				onDelete(item.id);
+			}
+
+			toast.success('Đã xóa sản phẩm khỏi giỏ hàng');
+		} catch (error) {
+			toast.error(error.message || 'Không thể xóa sản phẩm');
+		}
 	};
 
 	return (
@@ -153,6 +162,7 @@ const CartItem = ({ item, onDelete, onQuantityChange }) => {
 								onClick={handleDelete}
 								className="text-gray-400 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50"
 								aria-label="Xóa sản phẩm"
+								disabled={isUpdating}
 							>
 								<FaTrash size={16} />
 							</motion.button>
@@ -197,7 +207,9 @@ const CartItem = ({ item, onDelete, onQuantityChange }) => {
 								{item.product.sale_price > 0 ? (
 									<div className="flex items-center">
 										<span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
-											{formatPrice(item.sale_price)}
+											{formatPrice(
+												item.product.sale_price
+											)}
 										</span>
 										<span className="text-sm text-gray-500 line-through ml-2">
 											{formatPrice(item.price)}
@@ -205,7 +217,7 @@ const CartItem = ({ item, onDelete, onQuantityChange }) => {
 										<span className="ml-2 bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded-md font-medium">
 											{calculateDiscountPercentage(
 												item.price,
-												item.sale_price
+												item.product.sale_price
 											)}
 											% giảm
 										</span>
@@ -249,6 +261,7 @@ const CartItem = ({ item, onDelete, onQuantityChange }) => {
 										onChange={handleInputChange}
 										className="w-16 text-center bg-transparent border-none focus:outline-none focus:ring-0 text-gray-800 font-medium py-2"
 										min="1"
+										max={item.product.stock_quantity}
 										disabled={isUpdating}
 									/>
 
@@ -275,6 +288,13 @@ const CartItem = ({ item, onDelete, onQuantityChange }) => {
 										<FaPlus size={12} />
 									</motion.button>
 								</motion.div>
+
+								{/* Loading indicator */}
+								{isUpdating && (
+									<div className="ml-2">
+										<div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+									</div>
+								)}
 							</div>
 						</div>
 

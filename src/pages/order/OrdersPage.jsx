@@ -57,12 +57,12 @@ const OrdersPage = () => {
 				icon: 'bg-yellow-500',
 				label: 'Đang chờ xử lý',
 			},
-			completed: {
+			shipped: {
 				bg: 'bg-gradient-to-r from-green-100 to-green-50',
 				text: 'text-green-800',
 				border: 'border-green-200',
 				icon: 'bg-green-500',
-				label: 'Hoàn thành',
+				label: 'Đã gửi hàng',
 			},
 			processing: {
 				bg: 'bg-gradient-to-r from-blue-100 to-blue-50',
@@ -70,6 +70,13 @@ const OrdersPage = () => {
 				border: 'border-blue-200',
 				icon: 'bg-blue-500',
 				label: 'Đang xử lý',
+			},
+			delivered: {
+				bg: 'bg-gradient-to-r from-purple-100 to-purple-50',
+				text: 'text-purple-800',
+				border: 'border-purple-200',
+				icon: 'bg-purple-500',
+				label: 'Đã giao hàng',
 			},
 			cancelled: {
 				bg: 'bg-gradient-to-r from-red-100 to-red-50',

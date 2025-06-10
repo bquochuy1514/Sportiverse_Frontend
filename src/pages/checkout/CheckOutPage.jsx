@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { FaShoppingCart } from 'react-icons/fa';
 import UserInfoSection from '../../components/checkout/UserInfoSection';
 import CartItemsSection from '../../components/checkout/CartItemsSection';
@@ -9,6 +10,7 @@ import OrderSummarySection from '../../components/checkout/OrderSummarySection';
 
 const CheckOutPage = () => {
 	const { token, user } = useAuth();
+	const navigate = useNavigate();
 	const [totalAmount, setTotalAmount] = useState(0);
 	const [couponCode, setCouponCode] = useState('');
 	const [discountAmount, setDiscountAmount] = useState(0);
@@ -62,8 +64,6 @@ const CheckOutPage = () => {
 					},
 				});
 				const result = await response.json();
-				console.log(result);
-
 				if (result.success) {
 					setCartItems(result.data.items || []);
 				} else {
@@ -158,6 +158,8 @@ const CheckOutPage = () => {
 
 		setLoading(true);
 
+		setLoading(true);
+
 		try {
 			const response = await fetch('/api/orders', {
 				method: 'POST',
@@ -179,11 +181,35 @@ const CheckOutPage = () => {
 
 			if (result.success) {
 				toast.success('Đặt hàng thành công!');
+
+				// Lưu thông tin đơn hàng để hiển thị ở trang success
+				const orderData = {
+					order_id: result.data?.order_id || Date.now(),
+					total_amount: totalAmount,
+					discount_amount: discountAmount,
+					final_amount: finalAmount,
+					shipping_name:
+						userInfo.name || userInfo.full_name || 'Khách hàng',
+					shipping_phone: userInfo.phone,
+					shipping_address: userInfo.address,
+					coupon_code: couponCode,
+					created_at: new Date().toISOString(),
+				};
+
+				localStorage.setItem('lastOrder', JSON.stringify(orderData));
+
+				// Reset state
 				setCartItems([]);
 				setTotalAmount(0);
 				setFinalAmount(0);
 				setCouponCode('');
 				setDiscountAmount(0);
+
+				// Navigate với state
+				navigate('/order-success', {
+					state: { orderData },
+					replace: true,
+				});
 			} else {
 				toast.error(result.message || 'Có lỗi khi đặt hàng');
 			}

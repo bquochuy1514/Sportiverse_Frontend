@@ -5,11 +5,13 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaShoppingCart, FaStar } from 'react-icons/fa';
 import { BiCheckCircle } from 'react-icons/bi';
-import cartService from '../../../services/CartService';
 import { TbTruckDelivery } from 'react-icons/tb';
 import { toast } from 'react-toastify';
+import { useCart } from '../../../contexts/CartContext';
 
 const ProductCard = ({ product, index = 0 }) => {
+	const { addToCart } = useCart();
+
 	const formatPrice = (price) => {
 		return new Intl.NumberFormat('vi-VN', {
 			style: 'currency',
@@ -26,17 +28,9 @@ const ProductCard = ({ product, index = 0 }) => {
 	const handleAddToCart = async (e) => {
 		try {
 			e.stopPropagation();
-			// Gọi service để thêm sản phẩm vào giỏ hàng
-			// eslint-disable-next-line no-unused-vars
-			const response = await cartService.addToCart(product.id);
-			// Hiển thị thông báo thành công
+			await addToCart(product.id, 1);
 			toast.success('Đã thêm sản phẩm vào giỏ hàng!');
-
-			// Nếu bạn cần cập nhật UI hoặc state khác sau khi thêm vào giỏ hàng
-			// Ví dụ: cập nhật số lượng sản phẩm hiển thị trên icon giỏ hàng
-			// Có thể dispatch một action hoặc cập nhật state ở đây
 		} catch (error) {
-			// Hiển thị thông báo lỗi
 			toast.error(
 				error.message || 'Không thể thêm sản phẩm vào giỏ hàng'
 			);

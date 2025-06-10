@@ -1,45 +1,19 @@
 // src/pages/Cart/CartPage.jsx
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaShoppingCart, FaArrowLeft } from 'react-icons/fa';
 import EmptyCart from './EmptyCart';
 import CartItem from './CartItem';
 import OrderSummary from './OrderSummary';
-import cartService from '../../services/CartService';
 import { toast } from 'react-toastify';
+import { useCart } from '../../contexts/CartContext';
 
 const CartPage = () => {
 	const navigate = useNavigate();
-	const [cartItems, setCartItems] = useState([]);
-	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState(null);
 
-	const fetchCartItems = useCallback(async () => {
-		setIsLoading(true);
-		try {
-			const response = await fetch('/api/my-cart', {
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem('token')}`,
-				},
-			});
-			const data = await response.json();
-			// console.log('cart items:', data.data.items);
-			if (data.success) {
-				setCartItems(data.data.items || []);
-			} else {
-				setError('Không thể tải giỏ hàng');
-			}
-		} catch (err) {
-			setError('Lỗi khi tải giỏ hàng');
-			console.error('Error fetching cart:', err);
-		} finally {
-			setIsLoading(false);
-		}
-	}, []);
-
-	useEffect(() => {
-		fetchCartItems();
-	}, [fetchCartItems]);
+	// Sử dụng cartItems và loading từ context thay vì local state
+	const { cartItems, loading, removeFromCart, updateCartItem } = useCart();
 
 	const handleGoBack = () => {
 		navigate(-1);
@@ -49,39 +23,27 @@ const CartPage = () => {
 		navigate('/products');
 	};
 
+	// src/pages/Cart/CartPage.jsx - Xử lý toast message
 	const handleDeleteCartItem = async (cartItemId) => {
-		try {
-			const data = await cartService.removeFromCart(cartItemId);
-			console.log('Remove response:', data);
-			if (data.success) {
-				// Cập nhật state cartItems trực tiếp
-				setCartItems((prevItems) => {
-					return prevItems.filter((item) => item.id !== cartItemId);
-				});
-				toast.success(data.message);
-				setError(null);
-			} else {
-				setError(
-					data.message || 'Không thể xóa sản phẩm khỏi giỏ hàng'
-				);
-			}
-		} catch (err) {
-			setError(err.message || 'Lỗi khi xóa sản phẩm khỏi giỏ hàng');
-			console.error('Error deleting cart item:', err);
+		const result = await removeFromCart(cartItemId);
+
+		if (result.success) {
+			toast.success(result.message || 'Đã xóa sản phẩm khỏi giỏ hàng');
+			setError(null);
 		}
 	};
 
-	const handleQuantityChange = (itemId, newQuantity) => {
-		// Cập nhật số lượng trong state cartItems
-		setCartItems((prevItems) =>
-			prevItems.map((item) =>
-				item.id === itemId ? { ...item, quantity: newQuantity } : item
-			)
-		);
+	const handleQuantityChange = async (itemId, newQuantity) => {
+		try {
+			await updateCartItem(itemId, newQuantity);
+		} catch (err) {
+			console.error('Error updating quantity:', err);
+			toast.error('Lỗi khi cập nhật số lượng');
+		}
 	};
 
-	// Loading skeleton component
-	if (isLoading) {
+	// Sử dụng loading từ context
+	if (loading) {
 		return (
 			<div className="max-w-screen-xl mx-auto px-4 py-8">
 				<div className="h-8 w-32 bg-gray-200 rounded-md animate-pulse mb-6"></div>
@@ -107,7 +69,7 @@ const CartPage = () => {
 	}
 
 	// If cart is empty
-	if (cartItems.length === 0 && !isLoading) {
+	if (cartItems.length === 0 && !loading) {
 		return <EmptyCart onContinueShopping={handleGoToProducts} />;
 	}
 
