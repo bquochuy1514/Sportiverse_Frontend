@@ -103,47 +103,38 @@ export function CartProvider({ children }) {
 	const updateCartItem = async (itemId, quantity) => {
 		if (!token) return;
 
-		try {
-			const response = await fetch(`/api/cart/update/${itemId}`, {
-				method: 'PUT',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${token}`,
-					'ngrok-skip-browser-warning': 'true',
-				},
-				body: JSON.stringify({ quantity }),
-			});
+		const response = await fetch(`/api/cart/update/${itemId}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${token}`,
+				'ngrok-skip-browser-warning': 'true',
+			},
+			body: JSON.stringify({ quantity }),
+		});
 
-			const result = await response.json();
-			if (result.success) {
-				// Cập nhật cartItems và cartItemsCount
-				setCartItems((prevItems) =>
-					prevItems.map((item) =>
-						item.id === itemId
-							? { ...item, quantity: quantity }
-							: item
-					)
-				);
+		const result = await response.json();
+		if (result.success) {
+			// Cập nhật cartItems và cartItemsCount
+			setCartItems((prevItems) =>
+				prevItems.map((item) =>
+					item.id === itemId ? { ...item, quantity: quantity } : item
+				)
+			);
 
-				// Tính lại tổng số lượng
-				const newTotalCount = cartItems.reduce((total, item) => {
-					if (item.id === itemId) {
-						return total + quantity;
-					}
-					return total + item.quantity;
-				}, 0);
+			// Tính lại tổng số lượng
+			const newTotalCount = cartItems.reduce((total, item) => {
+				if (item.id === itemId) {
+					return total + quantity;
+				}
+				return total + item.quantity;
+			}, 0);
 
-				setCartItemsCount(newTotalCount);
+			setCartItemsCount(newTotalCount);
 
-				return result;
-			} else {
-				throw new Error(
-					result.message || 'Không thể cập nhật giỏ hàng'
-				);
-			}
-		} catch (error) {
-			console.error('Error updating cart item:', error);
-			throw error;
+			return result;
+		} else {
+			throw new Error(result.message || 'Không thể cập nhật giỏ hàng');
 		}
 	};
 

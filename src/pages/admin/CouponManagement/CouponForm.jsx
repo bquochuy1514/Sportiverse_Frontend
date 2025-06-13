@@ -59,8 +59,9 @@ const CouponForm = ({ coupon, onSave, onClose, loading }) => {
 				min_order_amount: formData.min_order_amount
 					? parseFloat(formData.min_order_amount)
 					: null,
-				is_active: formData.is_active === 'true',
+				is_active: formData.is_active === true,
 			};
+			console.log(submitData);
 			onSave(submitData);
 		}
 	};

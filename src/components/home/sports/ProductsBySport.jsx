@@ -7,6 +7,8 @@ import { FaShoppingCart, FaHeart, FaArrowRight, FaStar } from 'react-icons/fa';
 import { BiCheckCircle } from 'react-icons/bi';
 import { TbTruckDelivery } from 'react-icons/tb';
 import ReactPaginate from 'react-paginate';
+import { useCart } from '../../../contexts/CartContext';
+import { toast } from 'react-toastify';
 
 const ProductsBySport = () => {
 	const { slug } = useParams();
@@ -14,6 +16,7 @@ const ProductsBySport = () => {
 	const [sport, setSport] = useState(null);
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const { addToCart } = useCart();
 
 	useEffect(() => {
 		const fetchProductsBySport = async () => {
@@ -24,7 +27,7 @@ const ProductsBySport = () => {
 					`/api/products-categories/${slug}`
 				);
 				const data = await response.json();
-				console.log(data);
+
 				if (data.success) {
 					setProducts(data.products || []);
 					setSport(data.products[0].sport || null);
@@ -43,6 +46,17 @@ const ProductsBySport = () => {
 			fetchProductsBySport();
 		}
 	}, [slug]);
+
+	const handleAddToCart = async (productId) => {
+		try {
+			await addToCart(productId, 1);
+			toast.success('Đã thêm sản phẩm vào giỏ hàng!');
+		} catch (error) {
+			toast.error(
+				error.message || 'Không thể thêm sản phẩm vào giỏ hàng'
+			);
+		}
+	};
 
 	const formatPrice = (price) => {
 		return new Intl.NumberFormat('vi-VN', {
@@ -188,7 +202,6 @@ const ProductsBySport = () => {
 							transition={{ duration: 0.4, delay: index * 0.05 }}
 							className="transform transition-all duration-300 hover:-translate-y-1"
 						>
-							{console.log(products)}
 							<div
 								className={`bg-white rounded-lg shadow-sm hover:shadow overflow-hidden group h-full flex flex-col ${
 									product.stock_quantity <= 0
@@ -330,7 +343,12 @@ const ProductsBySport = () => {
 
 										{/* Add to cart button */}
 										{product.stock_quantity > 0 ? (
-											<button className="w-full mt-2 py-1.5 px-3 bg-blue-500 text-white text-xs rounded-md font-medium flex items-center justify-center hover:bg-blue-600 transition-colors">
+											<button
+												onClick={() =>
+													handleAddToCart(product.id)
+												}
+												className="w-full mt-2 py-1.5 px-3 bg-blue-500 text-white text-xs rounded-md font-medium flex items-center justify-center hover:bg-blue-600 transition-colors"
+											>
 												<FaShoppingCart className="mr-1.5 w-3 h-3" />
 												Thêm vào giỏ
 											</button>

@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
 				},
 			},
 			allowedHosts: [
-				'intl-medicaid-struct-conversations.trycloudflare.com',
+				'al-transcription-nails-intranet.trycloudflare.com',
 				'localhost',
 			],
 		},

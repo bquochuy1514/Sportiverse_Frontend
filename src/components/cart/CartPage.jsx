@@ -34,12 +34,7 @@ const CartPage = () => {
 	};
 
 	const handleQuantityChange = async (itemId, newQuantity) => {
-		try {
-			await updateCartItem(itemId, newQuantity);
-		} catch (err) {
-			console.error('Error updating quantity:', err);
-			toast.error('Lỗi khi cập nhật số lượng');
-		}
+		await updateCartItem(itemId, newQuantity);
 	};
 
 	// Sử dụng loading từ context

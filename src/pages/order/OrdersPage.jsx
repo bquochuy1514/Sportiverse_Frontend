@@ -8,12 +8,15 @@ import {
 	FaMapMarkerAlt,
 	FaBox,
 	FaTag,
+	FaTimes,
+	FaExclamationTriangle,
 } from 'react-icons/fa';
 
 const OrdersPage = () => {
 	const { token } = useAuth();
 	const [orders, setOrders] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [cancellingOrderId, setCancellingOrderId] = useState(null);
 
 	useEffect(() => {
 		const fetchOrders = async () => {
@@ -47,6 +50,56 @@ const OrdersPage = () => {
 
 		fetchOrders();
 	}, [token]);
+
+	// Hàm hủy đơn hàng
+	const handleCancelOrder = async (orderId) => {
+		const confirmCancel = window.confirm(
+			'Bạn có chắc chắn muốn hủy đơn hàng này? Hành động này không thể hoàn tác.'
+		);
+
+		if (!confirmCancel) return;
+
+		try {
+			setCancellingOrderId(orderId);
+
+			const response = await fetch(`/api/orders/${orderId}/cancel`, {
+				method: 'PUT',
+				headers: {
+					Authorization: `Bearer ${token}`,
+					'Content-Type': 'application/json',
+					'ngrok-skip-browser-warning': 'true',
+				},
+			});
+
+			const result = await response.json();
+			console.log('Cancel order result:', result);
+
+			if (result.success) {
+				toast.success(result.message);
+
+				// Cập nhật state orders
+				setOrders((prevOrders) =>
+					prevOrders.map((order) =>
+						order.order_id === orderId
+							? { ...order, status: 'cancelled' }
+							: order
+					)
+				);
+			} else {
+				toast.error(result.message || 'Không thể hủy đơn hàng');
+			}
+		} catch (error) {
+			console.error('Error cancelling order:', error);
+			toast.error('Có lỗi xảy ra khi hủy đơn hàng');
+		} finally {
+			setCancellingOrderId(null);
+		}
+	};
+
+	// Kiểm tra xem đơn hàng có thể hủy không
+	const canCancelOrder = (status) => {
+		return ['pending', 'processing'].includes(status);
+	};
 
 	const getStatusConfig = (status) => {
 		const configs = {
@@ -125,6 +178,10 @@ const OrdersPage = () => {
 					<div className="space-y-8">
 						{orders.map((order, index) => {
 							const statusConfig = getStatusConfig(order.status);
+							const canCancel = canCancelOrder(order.status);
+							const isCancelling =
+								cancellingOrderId === order.order_id;
+
 							return (
 								<div
 									key={order.order_id}
@@ -160,17 +217,66 @@ const OrdersPage = () => {
 												</div>
 											</div>
 
-											<div
-												className={`px-4 py-2 rounded-xl border-2 ${statusConfig.bg} ${statusConfig.text} ${statusConfig.border} font-semibold text-sm shadow-sm`}
-											>
-												<div className="flex items-center gap-2">
-													<div
-														className={`w-2 h-2 rounded-full ${statusConfig.icon}`}
-													></div>
-													{statusConfig.label}
+											<div className="flex items-center gap-3">
+												<div
+													className={`px-4 py-2 rounded-xl border-2 ${statusConfig.bg} ${statusConfig.text} ${statusConfig.border} font-semibold text-sm shadow-sm`}
+												>
+													<div className="flex items-center gap-2">
+														<div
+															className={`w-2 h-2 rounded-full ${statusConfig.icon}`}
+														></div>
+														{statusConfig.label}
+													</div>
 												</div>
+
+												{/* Nút hủy đơn hàng */}
+												{canCancel && (
+													<button
+														onClick={() =>
+															handleCancelOrder(
+																order.order_id
+															)
+														}
+														disabled={isCancelling}
+														className={`flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-300 shadow-sm hover:shadow-md ${
+															isCancelling
+																? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+																: 'bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 hover:border-red-300'
+														}`}
+													>
+														{isCancelling ? (
+															<>
+																<div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-300 border-t-gray-600"></div>
+																<span>
+																	Đang hủy...
+																</span>
+															</>
+														) : (
+															<>
+																<FaTimes className="text-sm" />
+																<span>
+																	Hủy đơn hàng
+																</span>
+															</>
+														)}
+													</button>
+												)}
 											</div>
 										</div>
+
+										{/* Cảnh báo cho đơn hàng có thể hủy */}
+										{canCancel && (
+											<div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-xl">
+												<div className="flex items-center gap-2 text-amber-700">
+													<FaExclamationTriangle className="text-sm" />
+													<span className="text-sm font-medium">
+														Bạn có thể hủy đơn hàng
+														này trong khi đơn hàng
+														đang được xử lý
+													</span>
+												</div>
+											</div>
+										)}
 
 										{/* Order Info */}
 										<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">

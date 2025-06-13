@@ -1,5 +1,4 @@
 // src/pages/admin/orders/components/OrderTable.jsx
-import React from 'react';
 import {
 	FiEye,
 	FiEdit3,
@@ -8,7 +7,6 @@ import {
 	FiCheck,
 	FiX,
 	FiClock,
-	FiUser,
 } from 'react-icons/fi';
 
 const OrderTable = ({
